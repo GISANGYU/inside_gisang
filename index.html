@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>인사이드 기상 - 장기 기억 저장소</title>
+
+    <!-- 폰트: Pretendard, GmarketSans -->
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+
+    <style>
+      @import url('https://webfontworld.github.io/gmarket/GmarketSans.css');
+
+      body {
+        font-family: 'Pretendard', sans-serif;
+        background-color: #0f0f13;
+        color: white;
+        overflow: hidden; /* 전체 스크롤 방지 */
+        margin: 0;
+      }
+
+      .font-title {
+        font-family: 'GmarketSans', sans-serif;
+      }
+
+      /* 스크롤바 커스텀 */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #444;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #666;
+      }
+
+      /* --- 구슬 (Marble) 스타일 --- */
+      .marble {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        margin: 0 auto;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgba(255, 255, 255, 0.9),
+          rgba(255, 255, 255, 0.1) 25%,
+          transparent 60%
+        );
+        box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.5),
+          inset 2px 2px 5px rgba(255, 255, 255, 0.3);
+        /* overflow: hidden; */
+      }
+
+      .shelf-row {
+        border-bottom: 2px solid #333;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        width: 100%;
+        z-index: -1;
+      }
+
+      .marble.active {
+        cursor: pointer;
+        z-index: 10;
+        opacity: 1;
+        filter: grayscale(0%);
+        position: relative;
+      }
+
+      .marble.active:hover {
+        transform: scale(1.1) translateY(-10px);
+        z-index: 20;
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.625) !important;
+        /* inset -5px -5px 10px rgba(0, 0, 0, 0.5); */
+      }
+      /* 이미지 */
+      .marble.active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: var(--memory-image);
+        background-size: cover;
+        background-position: center;
+        opacity: 0.7;
+        filter: blur(1px);
+        mix-blend-mode: overlay;
+        z-index: -1;
+        border-radius: 999px;
+      }
+
+      .marble.inactive {
+        cursor: default;
+        opacity: 0.3;
+        filter: grayscale(40%) saturate(60%);
+      }
+
+      .marble.yellow {
+        background-color: #ffd900a5;
+      }
+      .marble.active.yellow {
+        box-shadow: 0 0 15px #ffd900a5, inset -5px -5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .marble.blue {
+        background-color: #4169e1;
+      }
+      .marble.active.blue {
+        box-shadow: 0 0 15px #4169e1, inset -5px -5px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .marble.red {
+        background-color: #ff4d4d;
+      }
+      .marble.active.red {
+        box-shadow: 0 0 15px #ff4d4d, inset -5px -5px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .marble.green {
+        background-color: #32cd32;
+      }
+      .marble.active.green {
+        box-shadow: 0 0 15px #32cd32, inset -5px -5px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .marble.purple {
+        background-color: #9370db;
+      }
+      .marble.active.purple {
+        box-shadow: 0 0 15px #9370db, inset -5px -5px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .tooltip {
+        position: absolute;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
+        transition: opacity 0.2s;
+        z-index: 100;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        color: white !important;
+        opacity: 0;
+      }
+      .marble.active:hover .tooltip {
+        opacity: 1;
+      }
+
+      .modal-enter {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      .modal-enter-active {
+        opacity: 1;
+        transform: scale(1);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .modal-exit {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .modal-exit-active {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: opacity 0.2s;
+      }
+
+      .nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.4);
+        transition: all 0.3s;
+        z-index: 60;
+        padding: 20px;
+        border-radius: 50%;
+      }
+      .nav-btn:hover:not(:disabled) {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        scale: 1.1;
+      }
+      .nav-btn:disabled {
+        opacity: 0.1;
+        cursor: not-allowed;
+      }
+
+      .nav-link {
+        position: relative;
+        color: #9ca3af;
+        transition: color 0.3s;
+      }
+      .nav-link:hover {
+        color: #fff;
+      }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -4px;
+        left: 0;
+        background-color: #a855f7;
+        transition: width 0.3s;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      /* 햄버거 버튼 */
+      .menu-button {
+        display: none !important; /* 기본은 숨김 (PC) */
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        border: 1px solid #3f3f46;
+        background: #18181b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .menu-button-lines {
+        width: 18px;
+        height: 2px;
+        background: #e5e7eb;
+        position: relative;
+      }
+      .menu-button-lines::before,
+      .menu-button-lines::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 18px;
+        height: 2px;
+        background: #e5e7eb;
+      }
+      .menu-button-lines::before {
+        top: -6px;
+      }
+      .menu-button-lines::after {
+        top: 6px;
+      }
+
+      /* 모바일 메뉴 백드롭 */
+      .mobile-menu-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 80;
+      }
+      .mobile-menu-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* 모바일 메뉴 패널 */
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 260px;
+        max-width: 80%;
+        background: #111118;
+        border-left: 1px solid #27272a;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 90;
+        display: flex;
+        flex-direction: column;
+        padding: 24px 20px;
+      }
+      .mobile-menu.open {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+      .mobile-menu-title {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .mobile-menu-close {
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        border: 1px solid #3f3f46;
+        background: #18181b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #e5e7eb;
+      }
+
+      .mobile-menu-nav {
+        display: flex !important;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 8px;
+      }
+      .mobile-menu-link {
+        font-size: 14px;
+        font-weight: 600;
+        color: #d4d4d8;
+        text-decoration: none;
+        border-bottom: 1px solid rgb(62, 62, 62);
+        padding-bottom: 10px;
+      }
+      .mobile-menu-link:hover {
+        color: #ffffff;
+      }
+
+      /* 반응형 - 태블릿/모바일 */
+      @media (min-width: 400px) and (max-width: 1200px) {
+        nav,
+        aside {
+          display: none !important;
+        }
+
+        main {
+          width: 100% !important;
+        }
+
+        .menu-button {
+          display: flex !important; /* 이 구간에서 햄버거 버튼 보이게 */
+        }
+        .h-32 {
+          height: 5rem !important;
+        }
+        .marble {
+          width: 60px !important;
+          height: 60px !important;
+        }
+        footer {
+          text-align: center !important;
+        }
+        /* .marble.active {
+          width: 0px !important;
+          height: 60px !important;
+        } */
+
+        body {
+          width: 100% !important;
+          overflow-x: hidden !important;
+        }
+        #archive-container {
+          overflow-x: hidden !important;
+        }
+      }
+
+      @media (max-width: 400px) {
+        /* 0~400에서도 햄버거 보이게 */
+        nav,
+        aside {
+          display: none !important;
+        }
+        main {
+          width: 100% !important;
+        }
+        .menu-button {
+          display: flex !important;
+        }
+        .h-32 {
+          height: 3rem !important;
+        }
+        .marble {
+          width: 30px !important;
+          height: 30px !important;
+        }
+        .marble.active {
+          width: 40px !important;
+          height: 40px !important;
+        }
+        /* .tooltip {
+          opacity: 1 !important;
+          top: -2rem !important;
+          scale: calc(0.7) !important;
+          transform: translateX(-70%) !important;
+        } */
+        footer {
+          text-align: center !important;
+        }
+        footer .text-right {
+          text-align: center !important;
+          margin: 0px auto !important;
+        }
+        .border-t {
+          text-align: center !important;
+        }
+        body {
+          width: 100% !important;
+          overflow-x: hidden !important;
+        }
+        #archive-container {
+          overflow-x: hidden !important;
+        }
+      }
+
+      /* PC 사이즈 - 모바일 메뉴는 안 보이지만, 혹시 열려있으면 감추기 */
+      @media (min-width: 1200px) {
+        .mobile-menu-backdrop,
+        .mobile-menu {
+          display: none;
+        }
+      }
+    </style>
+
+    <!-- Tailwind CSS (나중에 완전 제거 예정이면 유지/삭제 선택) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="flex flex-col h-screen w-screen bg-[#0f0f13]">
+    <!-- 상단 헤더 -->
+    <header
+      class="flex-none w-full h-20 px-8 flex justify-between items-center border-b border-gray-800 bg-[#0f0f13] z-50"
+    >
+      <!-- 로고 -->
+      <a
+        href="index.html"
+        class="text-2xl font-bold font-title text-white tracking-wider hover:text-purple-400 transition-colors"
+      >
+        INSIDE GISANG
+      </a>
+
+      <!-- 데스크탑 네비게이션 -->
+      <nav class="hidden md:flex gap-8 text-sm font-bold">
+        <a href="profile.html" class="nav-link">Profile</a>
+        <a href="emotion.html" class="nav-link">Emotion Character</a>
+        <a href="core_memories.html" class="nav-link">Core Memories</a>
+        <a href="archive.html" class="nav-link text-white">Archive/Library</a>
+        <a href="timeline.html" class="nav-link">Timeline</a>
+      </nav>
+
+      <!-- 햄버거 버튼 (태블릿/모바일 전용) -->
+      <button id="menu-toggle" class="menu-button" aria-label="메뉴 열기">
+        <div class="menu-button-lines"></div>
+      </button>
+    </header>
+
+    <!-- 모바일 메뉴 백드롭 + 패널 -->
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop">
+      <div id="mobile-menu" class="mobile-menu">
+        <div class="mobile-menu-header">
+          <div class="mobile-menu-title">INSIDE GISANG</div>
+          <button
+            id="mobile-menu-close"
+            class="mobile-menu-close"
+            aria-label="메뉴 닫기"
+          >
+            ✕
+          </button>
+        </div>
+
+        <nav class="mobile-menu-nav">
+          <a href="profile.html" class="mobile-menu-link">Profile</a>
+          <a href="emotion.html" class="mobile-menu-link">Emotion Character</a>
+          <a href="core_memories.html" class="mobile-menu-link"
+            >Core Memories</a
+          >
+          <a href="archive.html" class="mobile-menu-link">Archive / Library</a>
+          <a href="timeline.html" class="mobile-menu-link">Timeline</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <div class="flex-1 flex overflow-hidden relative main_flex">
+      <!-- 좌측 패널 -->
+      <aside
+        class="w-[40%] h-full flex flex-col justify-center p-12 relative z-10 bg-gradient-to-r from-[#0f0f13] to-[#16161c] border-r border-gray-800 shadow-2xl"
+      >
+        <div class="space-y-6">
+          <h1
+            class="text-6xl font-bold font-title text-transparent bg-clip-text bg-gradient-to-br from-purple-400 via-pink-300 to-blue-400 leading-tight"
+          >
+            장기 기억<br />저장소
+          </h1>
+          <p class="text-gray-400 text-lg font-light leading-relaxed">
+            유기상의 대학생활,<br />
+            그 날의 감정들이 영원히 기록되는 곳.
+          </p>
+        </div>
+
+        <div class="absolute bottom-10 left-12 text-gray-600 text-sm">
+          Inside Gi-sang Project
+        </div>
+      </aside>
+
+      <!-- 우측 패널 -->
+      <main class="w-[60%] h-full flex flex-col relative bg-[#0f0f13]">
+        <!-- 요일 헤더 -->
+        <div
+          class="flex-none pt-8 pb-4 px-8 border-b border-gray-800/50 bg-[#0f0f13]/90 backdrop-blur z-20"
+        >
+          <div
+            class="grid grid-cols-7 gap-4 text-center font-bold text-gray-500 text-sm tracking-wider"
+          >
+            <div>MON</div>
+            <div>TUE</div>
+            <div>WED</div>
+            <div>THU</div>
+            <div>FRI</div>
+            <div>SAT</div>
+            <div>SUN</div>
+          </div>
+        </div>
+
+        <!-- 그리드 + 푸터 -->
+        <div
+          class="flex-1 overflow-y-auto custom-scrollbar flex flex-col"
+          id="archive-container"
+        >
+          <div class="px-8 pt-8">
+            <div
+              id="memory-grid"
+              class="grid grid-cols-7 gap-y-12 gap-x-2 pb-20"
+            >
+              <!-- JS로 구슬 생성 -->
+            </div>
+          </div>
+
+          <footer
+            class="mt-auto w-full border-t border-gray-800 bg-[#16161c] py-16 px-12"
+          >
+            <div class="flex flex-col md:flex-row justify-between items-end">
+              <div class="mb-8 md:mb-0">
+                <h2
+                  class="text-4xl md:text-5xl font-bold font-title text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500"
+                >
+                  INSIDE<br />GISANG
+                </h2>
+                <p class="text-gray-500 mt-4 text-sm">
+                  Copyright © 2025 Gi-sang Yu. All rights reserved.
+                </p>
+              </div>
+
+              <div class="text-right space-y-4">
+                <a
+                  href="https://blog.naver.com/yu2647921"
+                  target="_blank"
+                  class="inline-flex items-center gap-2 text-gray-400 hover:text-[#2DB400] transition-colors group"
+                >
+                  <span
+                    class="font-bold group-hover:underline decoration-2 underline-offset-4"
+                    >유기상의 기록 보관소</span
+                  >
+                  <svg
+                    class="w-8 h-8 fill-current"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15.258 7.5H18.75V16.5H15.258V10.9609L12.0234 16.5H8.53125V7.5H12.0156V13.0312L15.258 7.5Z"
+                    />
+                    <path d="M0 0H24V24H0V0Z" fill="none" />
+                  </svg>
+                </a>
+
+                <div class="border-t border-gray-700 pt-4 mt-2">
+                  <p class="text-lg font-bold text-white">
+                    유기상
+                    <span class="text-sm font-normal text-gray-400 ml-1"
+                      >22561061</span
+                    >
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    계원예술대학교 디지털미디어디자인과
+                  </p>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </main>
+    </div>
+
+    <!-- 모달 영역 (그대로) -->
+    <div
+      id="modal-backdrop"
+      class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4"
+    >
+      <button id="btn-prev" class="nav-btn left-4 lg:left-12">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-12 w-12"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+
+      <div
+        id="modal-content"
+        class="bg-[#1a1a20] w-full max-w-2xl rounded-2xl border border-gray-700 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] z-50 relative"
+      >
+        <div
+          class="p-6 border-b border-gray-700 flex justify-between items-start bg-[#222228]"
+        >
+          <div>
+            <div
+              id="modal-emotion-badge"
+              class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 bg-purple-900 text-purple-200 border border-purple-500/30"
+            >
+              감정: 기쁨
+            </div>
+            <h2
+              id="modal-title"
+              class="text-2xl font-bold font-title text-white"
+            >
+              제목
+            </h2>
+            <p id="modal-date" class="text-gray-400 text-sm mt-1">Date</p>
+          </div>
+          <button
+            onclick="closeModal()"
+            class="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto custom-scrollbar">
+          <div
+            class="w-full h-64 bg-[#111] rounded-xl mb-6 overflow-hidden relative group flex items-center justify-center border border-gray-800"
+          >
+            <img
+              id="modal-image"
+              src=""
+              alt="Emotion Character"
+              class="h-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
+            />
+          </div>
+
+          <div class="relative">
+            <div
+              class="absolute left-0 top-0 bottom-0 w-1 bg-gray-700 rounded-full"
+            ></div>
+            <div
+              id="modal-desc"
+              class="pl-4 text-gray-300 leading-relaxed text-sm md:text-base font-light"
+            ></div>
+          </div>
+        </div>
+
+        <div
+          class="p-4 border-t border-gray-700 bg-[#222228] flex justify-end items-center"
+        >
+          <button
+            onclick="closeModal()"
+            class="px-6 py-2 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            기억 닫기
+          </button>
+        </div>
+      </div>
+
+      <button id="btn-next" class="nav-btn right-4 lg:right-12">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-12 w-12"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- 기존 스크립트 -->
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+
+    <!-- 모바일 메뉴 토글 스크립트 -->
+    <script>
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
+      const mobileClose = document.getElementById('mobile-menu-close');
+
+      function closeMobileMenu() {
+        mobileMenu.classList.remove('open');
+        mobileBackdrop.classList.remove('open');
+      }
+
+      function openMobileMenu() {
+        mobileMenu.classList.add('open');
+        mobileBackdrop.classList.add('open');
+      }
+
+      menuToggle.addEventListener('click', openMobileMenu);
+      mobileClose.addEventListener('click', closeMobileMenu);
+      mobileBackdrop.addEventListener('click', function (e) {
+        // 패널 바깥(검은 영역) 클릭 시에만 닫기
+        if (e.target === mobileBackdrop) {
+          closeMobileMenu();
+        }
+      });
+
+      // 모바일 메뉴 안의 링크 클릭 시 자동 닫기
+      document.querySelectorAll('.mobile-menu-link').forEach(function (link) {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    </script>
+  </body>
+</html>

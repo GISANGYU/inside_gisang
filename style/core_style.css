@@ -1,0 +1,599 @@
+@import url('https://webfontworld.github.io/gmarket/GmarketSans.css');
+
+/* --- 1. Reset & Global Variables --- */
+:root {
+  --bg-color: #0f0f13;
+  --bg-dark: #000000;
+  --text-white: #ffffff;
+  --text-gray: #9ca3af;
+  --border-color: #1f2937; /* gray-800 similar */
+  --accent-yellow: #fbbf24;
+  --header-height: 80px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Pretendard', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-white);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+}
+.font-title {
+  font-family: 'GmarketSans', sans-serif;
+}
+
+/* 스크롤바 커스텀 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* --- 2. Header & Nav --- */
+.site-header {
+  height: var(--header-height);
+  width: 100%;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-color);
+  z-index: 50;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.header-inner {
+  height: 100%;
+  padding: 0 2rem; /* px-8 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'GmarketSans', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: color 0.3s;
+}
+.logo:hover {
+  color: var(--accent-yellow);
+}
+.logo-accent {
+  color: var(--accent-yellow);
+  font-size: 0.875rem;
+  vertical-align: top;
+}
+
+.desktop-nav {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.nav-link {
+  color: var(--text-gray);
+  position: relative;
+  transition: color 0.3s;
+}
+.nav-link:hover,
+.nav-link.active {
+  color: white;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: var(--accent-yellow);
+  transition: width 0.3s;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Mobile Menu Button */
+.menu-button {
+  display: none; /* PC에서는 숨김 */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #3f3f46;
+  background: #18181b;
+  align-items: center;
+  justify-content: center;
+}
+.menu-lines {
+  width: 18px;
+  height: 2px;
+  background: #e5e7eb;
+  position: relative;
+}
+.menu-lines::before,
+.menu-lines::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: #e5e7eb;
+}
+.menu-lines::before {
+  top: -6px;
+}
+.menu-lines::after {
+  top: 6px;
+}
+
+/* --- 3. Main Area (Core Memory) --- */
+.core-main-container {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Radial Gradient Background */
+  background: radial-gradient(circle at 30% 50%, #1a1a24 0%, #0f0f13 70%);
+  margin-top: var(--header-height); /* 헤더 높이만큼 띄우기 */
+}
+
+/* 배경 빛 장식 */
+.background-glow {
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  width: 800px;
+  height: 800px;
+  background: rgba(255, 180, 0, 0.08); /* Yellow glow */
+  border-radius: 50%;
+  filter: blur(120px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.carousel-track {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* --- 4. Core Marble Styles (구슬) --- */
+.core-marble {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  /* 구슬 기본 스타일 */
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 230, 0.95),
+    rgba(255, 215, 0, 0.4) 30%,
+    rgba(255, 165, 0, 0.2) 60%,
+    transparent 80%
+  );
+  box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.5),
+    inset 5px 5px 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 215, 0, 0.3);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* 구슬 이미지 */
+.core-marble::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--memory-image);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+  mix-blend-mode: overlay;
+  filter: blur(0.5px) contrast(1.2);
+  border-radius: 50%;
+  transition: transform 0.6s;
+}
+.core-marble:hover::before {
+  transform: scale(1.1);
+}
+
+/* 위치 클래스 */
+.core-marble.pos-active {
+  width: 500px;
+  height: 500px;
+  left: 25%;
+  z-index: 50;
+  opacity: 1;
+  box-shadow: inset -20px -20px 40px rgba(0, 0, 0, 0.6),
+    inset 10px 10px 30px rgba(255, 255, 255, 0.9),
+    0 0 60px rgba(255, 215, 0, 0.6), 0 0 100px rgba(255, 215, 0, 0.2);
+  filter: saturate(1.2);
+}
+.core-marble.pos-1 {
+  width: 400px;
+  height: 400px;
+  left: 55%;
+  z-index: 40;
+  opacity: 0.6;
+  transform: translate(-50%, -50%) scale(0.9);
+  filter: grayscale(20%);
+}
+.core-marble.pos-2 {
+  width: 400px;
+  height: 400px;
+  left: 75%;
+  z-index: 30;
+  opacity: 0.4;
+  transform: translate(-50%, -50%) scale(0.8);
+  filter: grayscale(50%);
+}
+.core-marble.pos-3 {
+  width: 400px;
+  height: 400px;
+  left: 90%;
+  z-index: 20;
+  opacity: 0.2;
+  transform: translate(-50%, -50%) scale(0.7);
+  filter: grayscale(80%);
+}
+.core-marble.pos-hidden-left {
+  width: 200px;
+  height: 200px;
+  left: -20%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5);
+}
+.core-marble.pos-hidden-right {
+  width: 200px;
+  height: 200px;
+  left: 120%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+/* --- 5. Navigation Buttons & Info --- */
+.nav-circle-btn {
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  z-index: 60;
+  transform: translateY(-50%);
+  backdrop-filter: blur(4px);
+}
+.prev-btn {
+  left: 2rem;
+}
+.next-btn {
+  right: 2rem;
+}
+.nav-circle-btn:hover:not(:disabled) {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: rgba(255, 215, 0, 0.8);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+.nav-circle-btn svg {
+  width: 40px;
+  height: 40px;
+}
+
+.bottom-info {
+  position: absolute;
+  bottom: 3rem;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 20;
+  pointer-events: none;
+}
+.info-title {
+  font-family: 'GmarketSans', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fef3c7; /* yellow-100 */
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  margin-bottom: 0.5rem;
+}
+.info-desc {
+  color: rgba(253, 230, 138, 0.6);
+  font-size: 0.875rem;
+}
+
+/* --- 6. Modal --- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-backdrop.hidden {
+  display: none;
+}
+
+.modal-window {
+  background: #1a1a20;
+  width: 100%;
+  max-width: 42rem; /* approx 672px */
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  position: relative;
+  /* Animation */
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(0.9);
+  opacity: 0;
+}
+.modal-window.open {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #374151;
+  background: #222228;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-radius: 1rem 1rem 0 0;
+}
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: #713f12;
+  color: #fef08a;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+.modal-title {
+  font-family: 'GmarketSans', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+.modal-date {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+.modal-image-wrapper {
+  width: 100%;
+  height: 16rem;
+  background: #111;
+  border-radius: 0.75rem;
+  border: 1px solid #1f2937;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-image-wrapper img {
+  height: 100%;
+  object-fit: contain;
+  padding: 1rem;
+}
+
+.modal-text-wrapper {
+  position: relative;
+  padding-left: 1rem;
+}
+.vertical-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent-yellow);
+  border-radius: 999px;
+}
+.modal-desc-content {
+  color: #d1d5db;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.modal-footer {
+  padding: 1rem;
+  border-top: 1px solid #374151;
+  background: #222228;
+  display: flex;
+  justify-content: flex-end;
+  border-radius: 0 0 1rem 1rem;
+}
+.modal-action-btn {
+  padding: 0.5rem 1.5rem;
+  background: var(--accent-yellow);
+  color: black;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+.modal-action-btn:hover {
+  background: #f59e0b;
+}
+
+.mobile-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 110;
+}
+.pc-modal-close {
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+.pc-modal-close:hover {
+  color: white;
+}
+
+/* --- 7. Mobile Menu & Responsive --- */
+.mobile-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 80;
+}
+.mobile-menu-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mobile-menu-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 260px;
+  background: #111118;
+  border-left: 1px solid #333;
+  transform: translateX(100%);
+  transition: transform 0.3s;
+  z-index: 90;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+.mobile-menu-panel.open {
+  transform: translateX(0);
+}
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.mobile-title {
+  font-family: 'GmarketSans', sans-serif;
+  font-weight: 700;
+}
+.mobile-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.mobile-nav-list a {
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.5rem;
+  color: #d4d4d8;
+  font-size: 0.875rem;
+}
+.mobile-nav-list a.highlight {
+  color: var(--accent-yellow);
+}
+
+/* --- Media Queries --- */
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none;
+  }
+  .menu-button {
+    display: flex;
+  }
+  .mobile-modal-close {
+    display: block;
+  }
+  .pc-modal-close {
+    display: none;
+  }
+
+  /* Mobile Core Layout */
+  .core-marble.pos-active {
+    width: 300px;
+    height: 300px;
+    left: 50%;
+  }
+  .core-marble.pos-1 {
+    left: 150%;
+    opacity: 0;
+  }
+  .core-marble.pos-2,
+  .core-marble.pos-3 {
+    display: none;
+  }
+
+  .background-glow {
+    width: 400px;
+    height: 400px;
+  }
+  .info-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .mobile-modal-close {
+    display: none;
+  }
+}

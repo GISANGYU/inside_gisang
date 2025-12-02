@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>인사이드 기상 - 감정 캐릭터</title>
+
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <link rel="stylesheet" href="style/emotion.css" />
+    <!-- 
+    <style>
+     
+    </style> -->
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="logo">INSIDE GISANG</a>
+
+        <nav class="desktop-nav">
+          <a href="profile.html" class="nav-link">Profile</a>
+          <a href="emotion.html" class="nav-link active">Emotion Character</a>
+          <a href="core_memories.html" class="nav-link">Core Memories</a>
+          <a href="archive.html" class="nav-link">Archive/Library</a>
+          <a href="timeline.html" class="nav-link">Timeline</a>
+        </nav>
+
+        <button id="menu-toggle" class="menu-button">
+          <div class="menu-button-lines"></div>
+        </button>
+      </div>
+    </header>
+
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop">
+      <div id="mobile-menu" class="mobile-menu">
+        <div class="mobile-menu-header">
+          <div class="mobile-menu-title">INSIDE GISANG</div>
+          <button id="mobile-menu-close" class="mobile-menu-close">✕</button>
+        </div>
+        <nav class="mobile-menu-nav">
+          <a href="profile.html" class="mobile-menu-link">Profile</a>
+          <a href="emotion.html" class="mobile-menu-link" style="color: #fbbf24"
+            >Emotion Character</a
+          >
+          <a href="core_memories.html" class="mobile-menu-link"
+            >Core Memories</a
+          >
+          <a href="archive.html" class="mobile-menu-link">Archive / Library</a>
+          <a href="timeline.html" class="mobile-menu-link">Timeline</a>
+        </nav>
+      </div>
+    </div>
+
+    <main class="main-stage" id="main-stage">
+      <div id="bg-overlay"></div>
+
+      <section class="top-info">
+        <h1 class="top-title">EMOTION CHARACTER</h1>
+        <p class="top-desc">
+          "기상이를 완성하는 다섯 가지 다채로운 페르소나.<br />
+          각기 다른 역할로 최상의 시너지를 만들어내는 저의 내면을 소개합니다."
+        </p>
+      </section>
+
+      <div class="character-container">
+        <div class="char-wrapper wrapper-purple" data-theme="theme-purple">
+          <img src="purple.png" alt="Fear" class="char-img" />
+          <div class="info-card">
+            <span class="card-title">FEAR (소심)</span>
+            <span class="card-desc"
+              >"잠깐! 저건 위험할 수도 있어. 돌다리도 두들겨 보고
+              건너야지."</span
+            >
+            <div class="card-tag">#완벽주의 #리스크관리</div>
+          </div>
+        </div>
+        <div class="char-wrapper wrapper-blue" data-theme="theme-blue">
+          <img src="blue.png" alt="Sadness" class="char-img" />
+          <div class="info-card">
+            <span class="card-title">SADNESS (슬픔)</span>
+            <span class="card-desc"
+              >"가끔은 멈춰서 울어도 괜찮아. 슬픔은 마음을 정화해주니까."</span
+            >
+            <div class="card-tag">#공감능력 #재충전</div>
+          </div>
+        </div>
+        <div class="char-wrapper wrapper-red" data-theme="theme-red">
+          <img src="red.png" alt="Anger" class="char-img" />
+          <div class="info-card">
+            <span class="card-title">ANGER (버럭)</span>
+            <span class="card-desc"
+              >"이건 말도 안 돼! 불공평한 상황은 절대 그냥 넘어갈 수
+              없어!"</span
+            >
+            <div class="card-tag">#열정 #추진력 #정의구현</div>
+          </div>
+        </div>
+        <div class="char-wrapper wrapper-yellow" data-theme="theme-yellow">
+          <img src="yellow.png" alt="Joy" class="char-img" />
+          <div class="info-card">
+            <span class="card-title">JOY (기쁨)</span>
+            <span class="card-desc"
+              >"와! 이거 진짜 재밌겠다! 오늘도 최고의 하루를 만들어보자!"</span
+            >
+            <div class="card-tag">#긍정왕 #에너지</div>
+          </div>
+        </div>
+        <div class="char-wrapper wrapper-green" data-theme="theme-green">
+          <img src="green.png" alt="Disgust" class="char-img" />
+          <div class="info-card">
+            <span class="card-title">DISGUST (까칠)</span>
+            <span class="card-desc"
+              >"음, 그건 좀 별로인데? 난 내 취향이 아니면 절대 안 해."</span
+            >
+            <div class="card-tag">#자기주관 #디테일</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mobile-char-list">
+        <div class="mob-item mob-purple">
+          <div class="mob-img-box"><img src="purple.png" alt="Fear" /></div>
+          <div class="mob-text-box">
+            <span class="mob-title">FEAR (소심)</span>
+            <p class="mob-desc">
+              "잠깐! 저건 위험할 수도 있어. 돌다리도 두들겨 보고 건너야지."
+            </p>
+            <span class="mob-tag">#완벽주의 #리스크관리</span>
+          </div>
+        </div>
+        <div class="mob-item mob-blue">
+          <div class="mob-img-box"><img src="blue.png" alt="Sadness" /></div>
+          <div class="mob-text-box">
+            <span class="mob-title">SADNESS (슬픔)</span>
+            <p class="mob-desc">
+              "가끔은 멈춰서 울어도 괜찮아. 슬픔은 마음을 정화해주니까."
+            </p>
+            <span class="mob-tag">#공감능력 #재충전</span>
+          </div>
+        </div>
+        <div class="mob-item mob-red">
+          <div class="mob-img-box"><img src="red.png" alt="Anger" /></div>
+          <div class="mob-text-box">
+            <span class="mob-title">ANGER (버럭)</span>
+            <p class="mob-desc">
+              "이건 말도 안 돼! 불공평한 상황은 절대 그냥 넘어갈 수 없어!"
+            </p>
+            <span class="mob-tag">#열정 #추진력</span>
+          </div>
+        </div>
+        <div class="mob-item mob-yellow">
+          <div class="mob-img-box"><img src="yellow.png" alt="Joy" /></div>
+          <div class="mob-text-box">
+            <span class="mob-title">JOY (기쁨)</span>
+            <p class="mob-desc">
+              "와! 이거 진짜 재밌겠다! 오늘도 최고의 하루를 만들어보자!"
+            </p>
+            <span class="mob-tag">#긍정왕 #에너지</span>
+          </div>
+        </div>
+        <div class="mob-item mob-green">
+          <div class="mob-img-box"><img src="green.png" alt="Disgust" /></div>
+          <div class="mob-text-box">
+            <span class="mob-title">DISGUST (까칠)</span>
+            <p class="mob-desc">
+              "음, 그건 좀 별로인데? 난 내 취향이 아니면 절대 안 해."
+            </p>
+            <span class="mob-tag">#자기주관 #디테일</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <h2>INSIDE<br />GISANG</h2>
+          <p class="footer-copyright">
+            Copyright © 2025 Gi-sang Yu. All rights reserved.
+          </p>
+        </div>
+        <div class="footer-right">
+          <a
+            href="https://blog.naver.com/yu2647921"
+            target="_blank"
+            class="blog-link"
+          >
+            <span>유기상의 기록 보관소</span>
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M15.258 7.5H18.75V16.5H15.258V10.9609L12.0234 16.5H8.53125V7.5H12.0156V13.0312L15.258 7.5Z"
+              />
+              <path d="M0 0H24V24H0V0Z" fill="none" />
+            </svg>
+          </a>
+          <div class="footer-info">
+            <p class="footer-name">
+              유기상 <span class="footer-id">22561061</span>
+            </p>
+            <p class="footer-dept">계원예술대학교 디지털미디어디자인과</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/emotion.js"></script>
+  </body>
+</html>

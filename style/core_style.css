@@ -99,7 +99,12 @@ button {
   font-size: 0.875rem;
   font-weight: 700;
 }
-
+.blog-link svg {
+  width: 2rem;
+  height: 2rem;
+  fill: currentColor;
+  transform: scaleX(-1) translate(3px, -5px);
+}
 .nav-link {
   color: var(--text-gray);
   position: relative;

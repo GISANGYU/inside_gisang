@@ -79,7 +79,7 @@ button {
   transition: color 0.3s;
 }
 .logo:hover {
-  color: #a855f7;
+  color: rgb(96, 165, 250);
 } /* 보라색 호버 효과 */
 
 .desktop-nav {
@@ -326,7 +326,7 @@ button {
   bottom: 0;
   transform-origin: bottom center;
   transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  cursor: pointer;
+  cursor: default;
   display: flex;
   justify-content: center;
 }
@@ -742,6 +742,7 @@ button {
   width: 2rem;
   height: 2rem;
   fill: currentColor;
+  transform: scaleX(-1) translate(3px, -5px);
 }
 
 .footer-info {

@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>인사이드 기상 - 프로필</title>
+
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+
+    <style>
+      @import url('https://webfontworld.github.io/gmarket/GmarketSans.css');
+
+      :root {
+        --bg-color: #0f0f13;
+        --text-white: #ffffff;
+        --accent-yellow: #fbbf24;
+        --accent-purple: #a855f7;
+        --header-height: 80px;
+        --footer-bg: #16161c;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100vh;
+        background-color: var(--bg-color);
+        color: var(--text-white);
+        font-family: 'Pretendard', sans-serif;
+        overflow-x: hidden;
+      }
+
+      html::-webkit-scrollbar {
+        display: none;
+      }
+      body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: inherit;
+      }
+
+      .font-title {
+        font-family: 'GmarketSans', sans-serif;
+      }
+
+      /* --- Header (Archive Style) --- */
+      .site-header {
+        height: var(--header-height);
+        width: 100%;
+        background: var(--bg-color);
+        border-bottom: 1px solid #1f2937;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+      }
+      .header-inner {
+        height: 100%;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        transition: color 0.3s;
+      }
+      .logo:hover {
+        color: var(--accent-purple);
+      }
+
+      .desktop-nav {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+
+      .nav-link {
+        position: relative;
+        color: #9ca3af;
+        transition: color 0.3s;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: white;
+      }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -4px;
+        left: 0;
+        background-color: var(--accent-purple);
+        transition: width 0.3s;
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      /* Mobile Menu Button */
+      .menu-button {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        border: 1px solid #3f3f46;
+        background: #18181b;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .menu-button-lines,
+      .menu-button-lines::before,
+      .menu-button-lines::after {
+        width: 18px;
+        height: 2px;
+        background: #e5e7eb;
+        position: relative;
+      }
+      .menu-button-lines::before,
+      .menu-button-lines::after {
+        content: '';
+        position: absolute;
+        left: 0;
+      }
+      .menu-button-lines::before {
+        top: -6px;
+      }
+      .menu-button-lines::after {
+        top: 6px;
+      }
+
+      /* Mobile Menu Overlay */
+      .mobile-menu-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        z-index: 150;
+      }
+      .mobile-menu-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 260px;
+        background: #111118;
+        border-left: 1px solid #27272a;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 160;
+        display: flex;
+        flex-direction: column;
+        padding: 24px 20px;
+      }
+      .mobile-menu.open {
+        transform: translateX(0);
+      }
+      .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .mobile-menu-title {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: white;
+      }
+      .mobile-menu-close {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid #3f3f46;
+        background: #18181b;
+        color: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mobile-menu-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 8px;
+      }
+      .mobile-menu-link {
+        font-size: 14px;
+        font-weight: 600;
+        color: #d4d4d8;
+        text-decoration: none;
+        border-bottom: 1px solid #3e3e3e;
+        padding-bottom: 10px;
+      }
+      .mobile-menu-link:hover {
+        color: white;
+      }
+
+      /* --- Main Layout --- */
+      .profile-main {
+        padding-top: calc(var(--header-height) + 4rem);
+        padding-bottom: 6rem;
+        min-height: 100vh;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+        position: relative;
+      }
+
+      /* Background Effect */
+      .bg-glow {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw;
+        height: 80vw;
+        background: radial-gradient(
+          circle,
+          rgba(168, 85, 247, 0.05) 0%,
+          rgba(15, 15, 19, 0) 70%
+        );
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* 1. Intro Section (ID Card Style) */
+      .intro-section {
+        display: flex;
+        gap: 3rem;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 0.8s ease forwards;
+      }
+
+      .profile-img-box {
+        width: 280px;
+        height: 350px;
+        flex-shrink: 0;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+      .profile-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+      .profile-img-box:hover img {
+        transform: scale(1.05);
+      }
+
+      .profile-info {
+        flex: 1;
+      }
+      .role-badge {
+        display: inline-block;
+        padding: 0.4rem 1rem;
+        border-radius: 99px;
+        background: rgba(168, 85, 247, 0.1);
+        color: #d8b4fe;
+        font-size: 0.875rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(168, 85, 247, 0.3);
+      }
+      .intro-name {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        line-height: 1.1;
+      }
+      .intro-desc {
+        font-size: 1.125rem;
+        color: #d1d5db;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+        max-width: 600px;
+      }
+
+      .skill-list {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+      }
+      .skill-item {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        background: #1f1f23;
+        color: #9ca3af;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      /* 2. Islands Section (Personality) */
+      .islands-title {
+        text-align: center;
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 2rem;
+        margin-bottom: 3rem;
+        margin-top: 2rem;
+        position: relative;
+      }
+      .islands-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: var(--accent-purple);
+        margin: 1rem auto 0;
+        border-radius: 2px;
+      }
+
+      .islands-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+      }
+
+      .island-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1.5rem;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        /* Floating Animation Initial */
+        transform: translateY(0);
+      }
+
+      /* Island Hover Effect */
+      .island-card:hover {
+        transform: translateY(-15px);
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      /* 각 섬별 컬러 포인트 */
+      .island-card.design:hover {
+        border-color: #fbbf24;
+        box-shadow: 0 10px 40px rgba(251, 191, 36, 0.15);
+      }
+      .island-card.dev:hover {
+        border-color: #60a5fa;
+        box-shadow: 0 10px 40px rgba(96, 165, 250, 0.15);
+      }
+      .island-card.passion:hover {
+        border-color: #ef4444;
+        box-shadow: 0 10px 40px rgba(239, 68, 68, 0.15);
+      }
+      .island-card.collab:hover {
+        border-color: #4ade80;
+        box-shadow: 0 10px 40px rgba(74, 222, 128, 0.15);
+      }
+
+      /* Floating Animation (둥둥 떠다니기) */
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      /* 짝수/홀수 박자에 맞춰 엇박자로 움직임 */
+      .island-card:nth-child(odd) {
+        animation: float 6s ease-in-out infinite;
+      }
+      .island-card:nth-child(even) {
+        animation: float 7s ease-in-out infinite 1s;
+      }
+      .island-card:hover {
+        animation: none;
+      } /* 호버시 멈춤 */
+
+      .island-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        display: block;
+      }
+      .island-name {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: white;
+      }
+      .island-desc {
+        font-size: 0.9rem;
+        color: #9ca3af;
+        line-height: 1.6;
+        word-break: keep-all;
+      }
+
+      /* Animation Class */
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* --- Mobile Responsive --- */
+      @media (max-width: 1024px) {
+        .desktop-nav {
+          display: none;
+        }
+        .menu-button {
+          display: flex;
+        }
+
+        .intro-section {
+          flex-direction: column;
+          text-align: center;
+          gap: 2rem;
+        }
+        .profile-img-box {
+          width: 240px;
+          height: 300px;
+          margin: 0 auto;
+        }
+        .intro-name {
+          font-size: 2.5rem;
+        }
+        .skill-list {
+          justify-content: center;
+        }
+
+        .islands-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .islands-grid {
+          grid-template-columns: 1fr;
+        }
+        .intro-name {
+          font-size: 2rem;
+        }
+        .profile-main {
+          padding-top: 6rem;
+        }
+      }
+
+      /* --- Footer (Archive Style) --- */
+      .site-footer {
+        width: 100%;
+        background: var(--footer-bg);
+        border-top: 1px solid #1f2937;
+        padding: 4rem 3rem;
+        z-index: 50;
+        position: relative;
+      }
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        max-width: 1600px;
+        margin: 0 auto;
+        gap: 2rem;
+      }
+      .footer-left h2 {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        background: linear-gradient(to right, #f3f4f6, #6b7280);
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .footer-copyright {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+
+      .footer-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1rem;
+        text-align: right;
+      }
+      .blog-link {
+        display: inline-flex;
+        items-center: center;
+        gap: 0.5rem;
+        color: #9ca3af;
+        transition: color 0.3s;
+      }
+      .blog-link:hover {
+        color: #2db400;
+      }
+      .blog-link span {
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-thickness: 2px;
+      }
+      .blog-link svg {
+        width: 2rem;
+        height: 2rem;
+        fill: currentColor;
+      }
+
+      .footer-info {
+        border-top: 1px solid #374151;
+        padding-top: 1rem;
+        margin-top: 0.5rem;
+      }
+      .footer-name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.25rem;
+      }
+      .footer-id {
+        font-size: 0.875rem;
+        font-weight: 400;
+        color: #9ca3af;
+        margin-left: 0.5rem;
+      }
+      .footer-dept {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      @media (max-width: 768px) {
+        .footer-inner {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .footer-right {
+          align-items: center;
+          text-align: center;
+        }
+        .footer-left h2 {
+          font-size: 2.25rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="logo">INSIDE GISANG</a>
+
+        <nav class="desktop-nav">
+          <a href="profile.html" class="nav-link active" style="color: white"
+            >Profile</a
+          >
+          <a href="emotion.html" class="nav-link">Emotion Character</a>
+          <a href="core_memories.html" class="nav-link">Core Memories</a>
+          <a href="archive.html" class="nav-link">Archive/Library</a>
+          <a href="timeline.html" class="nav-link">Timeline</a>
+        </nav>
+
+        <button id="menu-toggle" class="menu-button">
+          <div class="menu-button-lines"></div>
+        </button>
+      </div>
+    </header>
+
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop">
+      <div id="mobile-menu" class="mobile-menu">
+        <div class="mobile-menu-header">
+          <div class="mobile-menu-title">INSIDE GISANG</div>
+          <button id="mobile-menu-close" class="mobile-menu-close">✕</button>
+        </div>
+        <nav class="mobile-menu-nav">
+          <a href="profile.html" class="mobile-menu-link" style="color: #a855f7"
+            >Profile</a
+          >
+          <a href="emotion.html" class="mobile-menu-link">Emotion Character</a>
+          <a href="core_memories.html" class="mobile-menu-link"
+            >Core Memories</a
+          >
+          <a href="archive.html" class="mobile-menu-link">Archive / Library</a>
+          <a href="timeline.html" class="mobile-menu-link">Timeline</a>
+        </nav>
+      </div>
+    </div>
+
+    <main class="profile-main">
+      <div class="bg-glow"></div>
+
+      <section class="intro-section">
+        <div class="profile-img-box">
+          <img src="기상.jpg" alt="Gi-sang Yu Profile" />
+        </div>
+        <div class="profile-info">
+          <span class="role-badge">Digital Media Designer</span>
+          <h1 class="intro-name">
+            유기상
+            <span
+              style="
+                font-size: 1.5rem;
+                font-weight: 400;
+                color: #6b7280;
+                vertical-align: middle;
+              "
+              >Gi-sang Yu</span
+            >
+          </h1>
+          <p class="intro-desc">
+            "디자인과 기술 사이, 감정을 연결하는 크리에이터 유기상입니다.<br />
+            다양한 페르소나의 융합을 통해 사용자에게 잊지 못할 경험을
+            선사합니다."
+          </p>
+
+          <div class="skill-list">
+            <div class="skill-item">UI/UX Design</div>
+            <div class="skill-item">Web Publishing</div>
+            <div class="skill-item">Interaction</div>
+            <div class="skill-item">Video Editing</div>
+            <div class="skill-item">Communication</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="islands-title">PERSONALITY ISLANDS</h2>
+        <div class="islands-grid">
+          <div class="island-card design">
+            <span class="island-icon">🎨</span>
+            <h3 class="island-name">Creativity Island</h3>
+            <p class="island-desc">
+              상상력을 현실로 만드는 곳.<br />
+              디자인에 대한 즐거움과<br />
+              아이디어가 샘솟는 원천입니다.
+            </p>
+          </div>
+
+          <div class="island-card dev">
+            <span class="island-icon">💻</span>
+            <h3 class="island-name">Logic Island</h3>
+            <p class="island-desc">
+              차분하게 구조를 설계하는 곳.<br />
+              논리적인 사고와 코드를 통해<br />
+              단단한 기반을 만듭니다.
+            </p>
+          </div>
+
+          <div class="island-card passion">
+            <span class="island-icon">🔥</span>
+            <h3 class="island-name">Passion Island</h3>
+            <p class="island-desc">
+              목표를 향해 달리는 곳.<br />
+              불가능에 도전하는 뜨거운<br />
+              열정과 추진력을 담당합니다.
+            </p>
+          </div>
+
+          <div class="island-card collab">
+            <span class="island-icon">✨</span>
+            <h3 class="island-name">Detail Island</h3>
+            <p class="island-desc">
+              완벽함을 추구하는 곳.<br />
+              작은 디테일 하나도 놓치지 않는<br />
+              섬세한 감각의 영역입니다.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <h2>INSIDE<br />GISANG</h2>
+          <p class="footer-copyright">
+            Copyright © 2025 Gi-sang Yu. All rights reserved.
+          </p>
+        </div>
+        <div class="footer-right">
+          <a
+            href="https://blog.naver.com/yu2647921"
+            target="_blank"
+            class="blog-link"
+          >
+            <span>유기상의 기록 보관소</span>
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M15.258 7.5H18.75V16.5H15.258V10.9609L12.0234 16.5H8.53125V7.5H12.0156V13.0312L15.258 7.5Z"
+              />
+              <path d="M0 0H24V24H0V0Z" fill="none" />
+            </svg>
+          </a>
+          <div class="footer-info">
+            <p class="footer-name">
+              유기상 <span class="footer-id">22561061</span>
+            </p>
+            <p class="footer-dept">계원예술대학교 디지털미디어디자인과</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
+      const mobileClose = document.getElementById('mobile-menu-close');
+
+      function openMenu() {
+        mobileMenu.classList.add('open');
+        mobileBackdrop.classList.add('open');
+      }
+      function closeMenu() {
+        mobileMenu.classList.remove('open');
+        mobileBackdrop.classList.remove('open');
+      }
+
+      menuToggle.addEventListener('click', openMenu);
+      mobileClose.addEventListener('click', closeMenu);
+      mobileBackdrop.addEventListener('click', (e) => {
+        if (e.target === mobileBackdrop) closeMenu();
+      });
+    </script>
+  </body>
+</html>

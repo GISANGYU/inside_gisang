@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>인사이드 기상 - 프로필</title>
+
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+
+    <style>
+      @import url('https://webfontworld.github.io/gmarket/GmarketSans.css');
+
+      :root {
+        --bg-color: #0f0f13;
+        --text-white: #ffffff;
+        --accent-yellow: #fbbf24;
+        --accent-purple: #a855f7;
+        --header-height: 80px;
+        --footer-bg: #16161c;
+
+        /* 섬 글로우 색상 */
+        --coding-glow: rgba(96, 165, 250, 0.8);
+        --travel-glow: rgba(52, 211, 153, 0.8);
+        --food-glow: rgba(251, 146, 60, 0.8);
+        --default-shadow: rgba(0, 0, 0, 0.5);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100vh;
+        background-color: var(--bg-color);
+        color: var(--text-white);
+        font-family: 'Pretendard', sans-serif;
+        overflow-x: hidden;
+      }
+
+      html::-webkit-scrollbar {
+        display: none;
+      }
+      body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: inherit;
+      }
+
+      .font-title {
+        font-family: 'GmarketSans', sans-serif;
+      }
+
+      /* --- Header --- */
+      .site-header {
+        height: var(--header-height);
+        width: 100%;
+        background: var(--bg-color);
+        border-bottom: 1px solid #1f2937;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+      }
+      .header-inner {
+        height: 100%;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        transition: color 0.3s;
+      }
+      .logo:hover {
+        color: var(--accent-purple);
+      }
+
+      .desktop-nav {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+      .nav-link {
+        position: relative;
+        color: #9ca3af;
+        transition: color 0.3s;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: white;
+      }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -4px;
+        left: 0;
+        background-color: var(--accent-purple);
+        transition: width 0.3s;
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      /* Mobile Menu Button */
+      .menu-button {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        border: 1px solid #3f3f46;
+        background: #18181b;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .menu-button-lines,
+      .menu-button-lines::before,
+      .menu-button-lines::after {
+        width: 18px;
+        height: 2px;
+        background: #e5e7eb;
+        position: relative;
+      }
+      .menu-button-lines::before,
+      .menu-button-lines::after {
+        content: '';
+        position: absolute;
+        left: 0;
+      }
+      .menu-button-lines::before {
+        top: -6px;
+      }
+      .menu-button-lines::after {
+        top: 6px;
+      }
+
+      /* Mobile Menu */
+      .mobile-menu-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        z-index: 150;
+      }
+      .mobile-menu-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 260px;
+        background: #111118;
+        border-left: 1px solid #27272a;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 160;
+        display: flex;
+        flex-direction: column;
+        padding: 24px 20px;
+      }
+      .mobile-menu.open {
+        transform: translateX(0);
+      }
+      .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .mobile-menu-title {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: white;
+      }
+      .mobile-menu-close {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid #3f3f46;
+        background: #18181b;
+        color: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mobile-menu-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 8px;
+      }
+      .mobile-menu-link {
+        font-size: 14px;
+        font-weight: 600;
+        color: #d4d4d8;
+        text-decoration: none;
+        border-bottom: 1px solid #3e3e3e;
+        padding-bottom: 10px;
+      }
+      .mobile-menu-link:hover {
+        color: white;
+      }
+
+      /* --- Main Layout --- */
+      .profile-main {
+        padding-top: calc(var(--header-height) + 4rem);
+        padding-bottom: 10rem;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .bg-glow {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw;
+        height: 80vw;
+        background: radial-gradient(
+          circle,
+          rgba(168, 85, 247, 0.05) 0%,
+          rgba(15, 15, 19, 0) 70%
+        );
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* 1. Intro Section */
+      .intro-section {
+        display: flex;
+        gap: 3rem;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5rem;
+        /* 초기 로드 시 애니메이션 */
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 0.8s ease forwards;
+      }
+      .profile-img-box {
+        width: 200px;
+        height: 200px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .profile-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .profile-info {
+        text-align: left;
+      }
+      .intro-name {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .intro-desc {
+        font-size: 1rem;
+        color: #9ca3af;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+      }
+      .skill-tag {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 99px;
+        background: #27272a;
+        color: #d4d4d8;
+        font-size: 0.8rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      /* 2. Islands Title */
+      .islands-title {
+        text-align: center;
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 2rem;
+        margin-bottom: 3rem;
+        position: relative;
+        z-index: 10;
+        opacity: 0;
+        animation: fadeUp 0.8s ease forwards 0.3s;
+      }
+
+      /* --- 3. Islands Container (Scroll Layout) --- */
+      .islands-scroll-layout {
+        position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 15vh;
+        padding-bottom: 10vh;
+      }
+
+      /* 🔥 [핵심] 스크롤 애니메이션을 위한 클래스 */
+      /* 기본 상태: 숨겨져 있고 아래에 위치 */
+      .scroll-hidden {
+        opacity: 0;
+        transform: translateY(100px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+      }
+
+      /* 활성 상태: 보이고 제자리로 이동 */
+      .scroll-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Island Item Styles */
+      .island-item {
+        position: relative;
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        cursor: pointer;
+        /* hover 시 scale 트랜지션은 별도로 적용 */
+        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+          opacity 0.8s ease-out;
+      }
+
+      /* Hover시 커짐 */
+      .island-item.scroll-visible:hover {
+        transform: scale(1.1); /* active 상태일 때만 호버 작동 */
+        z-index: 20;
+      }
+
+      /* Image Styling */
+      .island-icon {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      .island-icon img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: filter 0.3s ease;
+        filter: drop-shadow(0 10px 20px var(--default-shadow));
+      }
+
+      /* Glow on Hover */
+      .island-coding:hover .island-icon img {
+        filter: drop-shadow(0 0 40px var(--coding-glow));
+      }
+      .island-travel:hover .island-icon img {
+        filter: drop-shadow(0 0 40px var(--travel-glow));
+      }
+      .island-food:hover .island-icon img {
+        filter: drop-shadow(0 0 40px var(--food-glow));
+      }
+
+      /* Positioning */
+      .island-coding {
+        align-self: flex-start;
+        margin-left: 00%;
+      }
+      .island-food {
+        align-self: flex-end;
+        margin-right: 00%;
+      }
+      .island-travel {
+        align-self: flex-start;
+        margin-left: 0%;
+      }
+
+      /* Labels */
+      .island-label {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+      }
+      .island-sub {
+        font-size: 1rem;
+        color: #d1d5db;
+        margin-top: 0.5rem;
+        opacity: 0.9;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+      }
+
+      /* Modal */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+      .modal-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-content {
+        background: #1a1a20;
+        width: 90%;
+        max-width: 500px;
+        border-radius: 1.5rem;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transform: scale(0.9);
+        transition: transform 0.3s;
+        position: relative;
+        text-align: center;
+      }
+      .modal-backdrop.active .modal-content {
+        transform: scale(1);
+      }
+
+      .modal-close-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        color: #9ca3af;
+        font-size: 1.5rem;
+      }
+      .modal-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .modal-title {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: white;
+      }
+      .modal-desc {
+        color: #d1d5db;
+        line-height: 1.6;
+        font-size: 1rem;
+        word-break: keep-all;
+      }
+
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .desktop-nav {
+          display: none;
+        }
+        .menu-button {
+          display: flex;
+        }
+        .intro-section {
+          flex-direction: column;
+          text-align: center;
+          gap: 1.5rem;
+        }
+        .profile-info {
+          text-align: center;
+        }
+
+        .islands-scroll-layout {
+          gap: 10vh;
+        }
+        .island-item {
+          width: 200px;
+          margin: 0 auto !important;
+          align-self: center !important;
+        }
+        .island-label {
+          font-size: 1.4rem;
+        }
+      }
+
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Footer */
+      .site-footer {
+        width: 100%;
+        background: var(--footer-bg);
+        border-top: 1px solid #1f2937;
+        padding: 4rem 3rem;
+        z-index: 50;
+        position: relative;
+      }
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        max-width: 1600px;
+        margin: 0 auto;
+        gap: 2rem;
+      }
+      .footer-left h2 {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        background: linear-gradient(to right, #f3f4f6, #6b7280);
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .footer-copyright {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+
+      .footer-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1rem;
+        text-align: right;
+      }
+      .blog-link {
+        display: inline-flex;
+        items-center: center;
+        gap: 0.5rem;
+        color: #9ca3af;
+        transition: color 0.3s;
+      }
+      .blog-link:hover {
+        color: #2db400;
+      }
+      .blog-link span {
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-thickness: 2px;
+      }
+      .blog-link svg {
+        width: 2rem;
+        height: 2rem;
+        fill: currentColor;
+      }
+
+      .footer-info {
+        border-top: 1px solid #374151;
+        padding-top: 1rem;
+        margin-top: 0.5rem;
+      }
+      .footer-name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.25rem;
+      }
+      .footer-id {
+        font-size: 0.875rem;
+        font-weight: 400;
+        color: #9ca3af;
+        margin-left: 0.5rem;
+      }
+      .footer-dept {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      @media (max-width: 768px) {
+        .footer-inner {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .footer-right {
+          align-items: center;
+          text-align: center;
+        }
+        .footer-left h2 {
+          font-size: 2.25rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="logo">INSIDE GISANG</a>
+        <nav class="desktop-nav">
+          <a href="profile.html" class="nav-link active" style="color: white"
+            >Profile</a
+          >
+          <a href="emotion.html" class="nav-link">Emotion Character</a>
+          <a href="core_memories.html" class="nav-link">Core Memories</a>
+          <a href="archive.html" class="nav-link">Archive/Library</a>
+          <a href="timeline.html" class="nav-link">Timeline</a>
+        </nav>
+        <button id="menu-toggle" class="menu-button">
+          <div class="menu-button-lines"></div>
+        </button>
+      </div>
+    </header>
+
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop">
+      <div id="mobile-menu" class="mobile-menu">
+        <div class="mobile-menu-header">
+          <div class="mobile-menu-title">INSIDE GISANG</div>
+          <button id="mobile-menu-close" class="mobile-menu-close">✕</button>
+        </div>
+        <nav class="mobile-menu-nav">
+          <a href="profile.html" class="mobile-menu-link" style="color: #a855f7"
+            >Profile</a
+          >
+          <a href="emotion.html" class="mobile-menu-link">Emotion Character</a>
+          <a href="core_memories.html" class="mobile-menu-link"
+            >Core Memories</a
+          >
+          <a href="archive.html" class="mobile-menu-link">Archive / Library</a>
+          <a href="timeline.html" class="mobile-menu-link">Timeline</a>
+        </nav>
+      </div>
+    </div>
+
+    <main class="profile-main">
+      <div class="bg-glow"></div>
+
+      <section class="intro-section">
+        <div class="profile-img-box">
+          <img src="기상.jpg" alt="Gi-sang Yu Profile" />
+        </div>
+        <div class="profile-info">
+          <h1 class="intro-name">유기상</h1>
+          <p class="intro-desc">
+            디지털미디어디자인과 22561061<br />
+            "세상을 여행하며 코드로 맛있는 경험을 요리합니다."
+          </p>
+          <div>
+            <span class="skill-tag">#WebPublishing</span>
+            <span class="skill-tag">#UI/UX</span>
+            <span class="skill-tag">#Photography</span>
+            <span class="skill-tag">#Coding</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="islands-title">MY ISLANDS</h2>
+
+        <div class="islands-scroll-layout">
+          <div
+            class="island-item island-coding scroll-hidden"
+            onclick="openModal('coding')"
+          >
+            <div class="island-icon">
+              <img src="coding.png" alt="Coding Island" />
+            </div>
+            <span class="island-label">코딩</span>
+            <span class="island-sub">Logic & Build</span>
+          </div>
+
+          <div
+            class="island-item island-food scroll-hidden"
+            onclick="openModal('food')"
+          >
+            <div class="island-icon">
+              <img src="food.png" alt="Food Island" />
+            </div>
+            <span class="island-label">음식</span>
+            <span class="island-sub">Taste of Life</span>
+          </div>
+
+          <div
+            class="island-item island-travel scroll-hidden"
+            onclick="openModal('travel')"
+          >
+            <div class="island-icon">
+              <img src="travel.png" alt="Travel Island" />
+            </div>
+            <span class="island-label">여행</span>
+            <span class="island-sub">New Experience</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="modal-backdrop" class="modal-backdrop">
+      <div class="modal-content">
+        <button class="modal-close-btn" onclick="closeModal()">✕</button>
+        <span id="modal-icon" class="modal-icon"></span>
+        <h3 id="modal-title" class="modal-title"></h3>
+        <p id="modal-desc" class="modal-desc"></p>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <h2>INSIDE<br />GISANG</h2>
+          <p class="footer-copyright">
+            Copyright © 2025 Gi-sang Yu. All rights reserved.
+          </p>
+        </div>
+        <div class="footer-right">
+          <a
+            href="https://blog.naver.com/yu2647921"
+            target="_blank"
+            class="blog-link"
+          >
+            <span>유기상의 기록 보관소</span>
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M15.258 7.5H18.75V16.5H15.258V10.9609L12.0234 16.5H8.53125V7.5H12.0156V13.0312L15.258 7.5Z"
+              />
+              <path d="M0 0H24V24H0V0Z" fill="none" />
+            </svg>
+          </a>
+          <div class="footer-info">
+            <p class="footer-name">
+              유기상 <span class="footer-id">22561061</span>
+            </p>
+            <p class="footer-dept">계원예술대학교 디지털미디어디자인과</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // 1. Mobile Menu
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
+      const mobileClose = document.getElementById('mobile-menu-close');
+
+      function openMenu() {
+        mobileMenu.classList.add('open');
+        mobileBackdrop.classList.add('open');
+      }
+      function closeMenu() {
+        mobileMenu.classList.remove('open');
+        mobileBackdrop.classList.remove('open');
+      }
+
+      menuToggle.addEventListener('click', openMenu);
+      mobileClose.addEventListener('click', closeMenu);
+      mobileBackdrop.addEventListener('click', (e) => {
+        if (e.target === mobileBackdrop) closeMenu();
+      });
+
+      // 2. Island Modal
+      const modalBackdrop = document.getElementById('modal-backdrop');
+      const modalTitle = document.getElementById('modal-title');
+      const modalDesc = document.getElementById('modal-desc');
+      const modalIcon = document.getElementById('modal-icon');
+
+      const islandData = {
+        coding: {
+          title: 'CODING ISLAND',
+          icon: '💻',
+          desc: '코딩은 저에게 논리적인 사고의 즐거움입니다.<br><br>복잡한 문제를 해결하고, 상상했던 아이디어를 웹 화면으로 구현해내는 과정에서 큰 성취감을 느낍니다. 새로운 기술 스택을 배우는 것을 두려워하지 않으며, 특히 인터랙티브한 웹 경험을 만드는 데 관심이 많습니다.',
+        },
+        travel: {
+          title: 'TRAVEL ISLAND',
+          icon: '✈️',
+          desc: '여행은 새로운 영감의 원천입니다.<br><br>낯선 곳에서의 경험은 저의 시야를 넓혀주고, 다양한 문화와 사람들을 만나며 디자인적 감각을 충전합니다. 카메라는 제 여행의 필수품이며, 풍경과 인물을 담아 세상의 이야기를 기록합니다.',
+        },
+        food: {
+          title: 'FOOD ISLAND',
+          icon: '🍔',
+          desc: '맛있는 음식은 삶의 행복입니다.<br><br>단순히 먹는 것을 넘어, 맛집을 탐방하고 그 공간의 분위기를 즐기는 것을 좋아합니다. 좋은 사람들과 함께하는 식사는 저에게 최고의 힐링이며, 새로운 맛을 발견하는 것은 언제나 설레는 일입니다.',
+        },
+      };
+
+      function openModal(type) {
+        const data = islandData[type];
+        if (!data) return;
+        modalTitle.textContent = data.title;
+        modalDesc.innerHTML = data.desc;
+        modalIcon.textContent = data.icon;
+        modalBackdrop.classList.add('active');
+      }
+
+      function closeModal() {
+        modalBackdrop.classList.remove('active');
+      }
+
+      modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) closeModal();
+      });
+
+      // 3. Scroll Animation Logic (Intersection Observer)
+      // 화면에 요소가 나타나면 .scroll-visible 클래스를 추가하여 애니메이션 실행
+      const observerOptions = {
+        root: null, // viewport
+        rootMargin: '0px',
+        threshold: 0.5, // 요소가 30% 보이면 실행
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('scroll-visible');
+            // 한 번 나타나면 다시 감시할 필요 없음 (원한다면 주석 해제)
+            // observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // 모든 .island-item을 감시
+      const islands = document.querySelectorAll('.island-item');
+      islands.forEach((island) => {
+        observer.observe(island);
+      });
+    </script>
+  </body>
+</html>

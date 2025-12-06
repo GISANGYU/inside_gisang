@@ -2,8 +2,10 @@
 const gridContainer = document.getElementById('memory-grid');
 const startDate = new Date('2025-02-24');
 const endDate = new Date('2025-08-31');
+
 // 날짜 차이 계산
 const dayDiff = (endDate - startDate) / (1000 * 60 * 60 * 24);
+
 // 감정 배열 (비활성 구슬에 랜덤 감정 부여용)
 const emotions = ['yellow', 'blue', 'red', 'green', 'purple'];
 
@@ -11,28 +13,27 @@ for (let i = 0; i <= dayDiff; i++) {
   // 현재 날짜 계산
   let currentDate = new Date(startDate);
   currentDate.setDate(startDate.getDate() + i);
+
   // 날짜 문자열 (YYYY-MM-DD)
   const dateString = currentDate.toISOString().split('T')[0];
+
   // 해당 날짜의 데이터 찾기
   const memory = memoryData.find((m) => m.date === dateString);
 
   // 선반
   const shelf = document.createElement('div');
-  // CSS 클래스 설정
   shelf.className =
     'w-full h-32 relative flex flex-col justify-end items-center';
+
   // 선반 줄
   const line = document.createElement('div');
-  // CSS 클래스 설정
   line.className = 'shelf-row';
-  // 선반 줄 추가
   shelf.appendChild(line);
+
   // 날짜 라벨
   const dateLabel = document.createElement('div');
-  // CSS 클래스 설정
   dateLabel.className =
     'text-[10px] text-gray-700 mb-1 absolute bottom-[-20px] font-mono';
-  // 날짜 텍스트 설정
   dateLabel.innerText = `${
     currentDate.getMonth() + 1
   }.${currentDate.getDate()}`;
@@ -50,24 +51,20 @@ for (let i = 0; i <= dayDiff; i++) {
     const charImgUrl = `url('${memory.image}')`;
     marble.style.setProperty('--memory-image', charImgUrl);
 
-    // 툴팁
-    // 기존 주석코드는 날짜와 타이틀을 모두 표시했으나,
-    // 디자인인 넘 별로라 날짜는 제거하고 타이틀만 표시하도록 수정
-    // const tooltip = document.createElement('div');
-    // tooltip.className = 'tooltip';
-    // tooltip.textContent = `${dateString}`;
-    // marble.appendChild(tooltip);
+    // 툴팁 (타이틀만 표시)
     const tooltip = document.createElement('div');
     tooltip.className = 'tooltip';
-    tooltip.innerText = memory.title; // 날짜(dateString) 제거하고 title만 대입
+    tooltip.innerText = memory.title;
     marble.appendChild(tooltip);
-    // 클릭 이벤트 등록 활성 구슬일 때만 (모달 오픈)
+
+    // 클릭 이벤트 (모달 오픈)
     marble.onclick = () => openModal(memory);
   } else {
     // 비활성 구슬
     const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
     marble.classList.add('inactive', randomEmotion);
   }
+
   // 구슬을 선반에 추가
   shelf.appendChild(marble);
   // 선반을 그리드 컨테이너에 추가
@@ -78,7 +75,20 @@ for (let i = 0; i <= dayDiff; i++) {
 const modalBackdrop = document.getElementById('modal-backdrop');
 const modalContent = document.getElementById('modal-content');
 
+// ✅ 모달 내부 스크롤 영역 잡기
+const modalBody = document.getElementById('modal-body');
+
+// ✅ 모달 스크롤 최상단으로 초기화하는 함수
+function resetModalScroll() {
+  if (modalBody) {
+    modalBody.scrollTop = 0;
+  }
+}
+
 function openModal(data) {
+  // ✅ 모달 열 때마다 항상 스크롤 최상단으로 초기화
+  resetModalScroll();
+
   // 현재 데이터의 인덱스 찾기
   const currentIndex = memoryData.indexOf(data);
 
@@ -92,6 +102,7 @@ function openModal(data) {
 
   // 설명(desc)은 innerHTML로 넣기 (이미지/HTML 태그)
   document.getElementById('modal-desc').innerHTML = data.desc;
+
   // 감정 배지
   const badge = document.getElementById('modal-emotion-badge');
   badge.innerText = `감정: ${getEmotionName(data.emotion)}`;
@@ -106,7 +117,7 @@ function openModal(data) {
   const btnPrev = document.getElementById('btn-prev');
   if (prevData) {
     btnPrev.disabled = false;
-    btnPrev.onclick = () => openModal(prevData);
+    btnPrev.onclick = () => openModal(prevData); // ✅ openModal 안에서 이미 스크롤 초기화
   } else {
     btnPrev.disabled = true;
     btnPrev.onclick = null;
@@ -116,19 +127,24 @@ function openModal(data) {
   const btnNext = document.getElementById('btn-next');
   if (nextData) {
     btnNext.disabled = false;
-    btnNext.onclick = () => openModal(nextData);
+    btnNext.onclick = () => openModal(nextData); // ✅ 여기서도 같은 함수 사용
   } else {
     btnNext.disabled = true;
     btnNext.onclick = null;
   }
+
   // 모달 열기 애니메이션
   modalBackdrop.classList.remove('hidden');
   modalContent.classList.remove('modal-exit', 'modal-exit-active');
   modalContent.classList.add('modal-enter');
   setTimeout(() => modalContent.classList.add('modal-enter-active'), 10);
 }
+
 // 모달 닫기 함수
 function closeModal() {
+  // ✅ 닫을 때도 한번 초기화해두면 다음에 열릴 때도 깔끔
+  resetModalScroll();
+
   modalContent.classList.remove('modal-enter', 'modal-enter-active');
   modalContent.classList.add('modal-exit');
   setTimeout(() => modalContent.classList.add('modal-exit-active'), 10);
@@ -137,10 +153,12 @@ function closeModal() {
   }, 300);
 }
 
+// 백드롭(검은 배경) 클릭 시 모달 닫기
 modalBackdrop.addEventListener('click', (e) => {
   // 버튼 클릭 시 닫히지 않도록 예외 처리
   if (e.target === modalBackdrop) closeModal();
 });
+
 // 감정 이름 매핑 함수
 function getEmotionName(emotion) {
   const map = {
@@ -152,6 +170,7 @@ function getEmotionName(emotion) {
   };
   return map[emotion] || '알 수 없음';
 }
+
 // 감정 색상 클래스 매핑 함수
 function getEmotionColorClass(emotion) {
   const map = {

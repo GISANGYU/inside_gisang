@@ -201,6 +201,14 @@
         background-color: rgba(255, 255, 255, 0.1);
         scale: 1.1;
       }
+      @media (max-width: 1200px) {
+        .nav-btn:hover:not(:disabled) {
+          /* PC용 hover 스타일 무효화 */
+          color: rgba(255, 255, 255, 0.4);
+          background-color: transparent;
+          scale: 1;
+        }
+      }
       .nav-btn:disabled {
         opacity: 0.1;
         cursor: not-allowed;
@@ -675,8 +683,8 @@
             </svg>
           </button>
         </div>
-
-        <div class="p-6 overflow-y-auto custom-scrollbar">
+        <!-- modal-body 스크롤 초기화 함수-->
+        <div id="modal-body" class="p-6 overflow-y-auto custom-scrollbar">
           <div
             class="w-full h-64 bg-[#111] rounded-xl mb-6 overflow-hidden relative group flex items-center justify-center border border-gray-800"
           >

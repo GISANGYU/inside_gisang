@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inside Out Emotion Orbs – Intro</title>
+    <title>인사이드 기상 - 감정정리</title>
 
     <link
       rel="stylesheet"
@@ -177,6 +177,19 @@
         display: flex;
         flex-direction: column;
         padding: 24px 20px;
+      }
+      /* .main_link::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        bottom: -4px;
+        left: 0;
+        background-color: var(--accent-purple);
+        transition: width 0.3s;
+      } */
+      .main_link {
+        color: var(--accent-purple) !important;
       }
       .mobile-menu.open {
         transform: translateX(0);
@@ -419,10 +432,15 @@
 
       /* 결과 화면 스타일 */
       #result-section {
-        margin-top: 150px;
+        margin-top: 100px;
         display: none;
         opacity: 0;
         transition: opacity 1s ease;
+      }
+      @media (max-width: 1024px) {
+        #result-section {
+          margin-top: 50px;
+        }
       }
       #result-section.visible {
         display: block;
@@ -577,6 +595,10 @@
         .card-grid {
           grid-template-columns: repeat(3, 1fr);
         }
+        .emotion-card.on::before {
+          transform: translate(-50%, -50%) scale(2.5);
+          opacity: 0.8;
+        }
       }
       @media (max-width: 768px) {
         .footer-inner {
@@ -638,7 +660,9 @@
             >Core Memories</a
           >
           <a href="archive.html" class="mobile-menu-link">Archive / Library</a>
-          <a href="arrangement.html" class="mobile-menu-link">Arrangement</a>
+          <a href="arrangement.html" class="mobile-menu-link main_link"
+            >Arrangement</a
+          >
         </nav>
       </div>
     </div>
@@ -767,7 +791,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
     <script>
-      // --- 모바일 메뉴 로직 추가 ---
+      // --- 모바일 메뉴 로직 ---
       const menuToggle = document.getElementById('menu-toggle');
       const mobileMenu = document.getElementById('mobile-menu');
       const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
@@ -787,8 +811,22 @@
       mobileBackdrop.addEventListener('click', (e) => {
         if (e.target === mobileBackdrop) closeMenu();
       });
+      const card = document.querySelector('.emotion-card');
 
-      // --- 기존 게임 로직 (변경 없음) ---
+      window.addEventListener('scroll', () => {
+        const cards = document.querySelectorAll('.emotion-card');
+        cards.forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          const cardBefore = card.querySelector('::before');
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            card.classList.add('on');
+          } else {
+            card.classList.remove('on');
+          }
+        });
+      });
+
+      // --- 게임 데이터 및 설정 ---
       const emotions = [
         {
           name: 'joy',
@@ -853,12 +891,25 @@
       Runner.run(runner, engine);
 
       let balls = [];
+
+      // --- [리팩토링 부분] 공 크기 반응형 설정 ---
+      // 1024px 이하일 경우 모바일/태블릿으로 간주하여 공 크기를 줄임
+      const isSmallScreen = window.innerWidth <= 1024;
+
+      // 설정값: [모바일용] : [PC용]
+      const minR = isSmallScreen ? 25 : 40; // 최소 반지름
+      const maxR = isSmallScreen ? 50 : 70; // 최대 반지름
+      const scale = isSmallScreen ? 0.05 : 0.07; // 화면 대비 비율
+
       const baseRadius = Math.max(
-        40,
-        Math.min(70, Math.min(width, height) * 0.07)
+        minR,
+        Math.min(maxR, Math.min(width, height) * scale)
       );
+
       const radius = baseRadius;
-      const MAX_SPEED = 27;
+      // ----------------------------------------
+
+      const MAX_SPEED = 12;
 
       const clearedEmotions = new Set();
       const emotionStatus = {};
@@ -953,6 +1004,7 @@
       function checkClusters() {
         const n = balls.length;
         if (n === 0) return;
+        // 공의 크기(radius)에 비례해서 감지 거리 설정 (자동 반영됨)
         const threshold = radius * 2.05;
         const visited = new Set();
         const toRemove = new Set();
@@ -1005,6 +1057,7 @@
         }
       }
 
+      // Walls
       const wallOptions = { isStatic: true, render: { fillStyle: '#181818' } };
       Composite.add(world, [
         Bodies.rectangle(width / 2, height + 25, width, 50, wallOptions),

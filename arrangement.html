@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inside Out Emotion Orbs – Intro</title>
+
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+
+    <style>
+      @import url('https://webfontworld.github.io/gmarket/GmarketSans.css');
+
+      /* --- 공통 변수 및 헤더/푸터 스타일 (다른 페이지와 동일) --- */
+      :root {
+        --bg-color: #0f0f13; /* 기존 #111과 거의 흡사하지만 테마 통일 */
+        --text-white: #ffffff;
+        --accent-yellow: #fbbf24;
+        --accent-purple: #28ff02;
+        --header-height: 80px;
+        --footer-bg: #16161c;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        background: #111; /* 게임 배경색 유지 */
+        color: var(--text-white);
+        font-family: 'Pretendard', sans-serif;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: inherit;
+      }
+
+      /* --- Header Style --- */
+      .site-header {
+        height: var(--header-height);
+        width: 100%;
+        background: rgba(15, 15, 19, 0.9); /* 배경 살짝 투명 */
+        border-bottom: 1px solid #1f2937;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+      }
+      .header-inner {
+        height: 100%;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        transition: color 0.3s;
+      }
+      .logo:hover {
+        color: var(--accent-purple);
+      }
+
+      .desktop-nav {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+      .nav-link {
+        position: relative;
+        color: #9ca3af;
+        transition: color 0.3s;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: white;
+      }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -4px;
+        left: 0;
+        background-color: var(--accent-purple);
+        transition: width 0.3s;
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      /* Mobile Menu Button */
+      .menu-button {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        border: 1px solid #3f3f46;
+        background: #18181b;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .menu-button-lines,
+      .menu-button-lines::before,
+      .menu-button-lines::after {
+        width: 18px;
+        height: 2px;
+        background: #e5e7eb;
+        position: relative;
+      }
+      .menu-button-lines::before,
+      .menu-button-lines::after {
+        content: '';
+        position: absolute;
+        left: 0;
+      }
+      .menu-button-lines::before {
+        top: -6px;
+      }
+      .menu-button-lines::after {
+        top: 6px;
+      }
+
+      /* Mobile Menu */
+      .mobile-menu-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        z-index: 150;
+      }
+      .mobile-menu-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 260px;
+        background: #111118;
+        border-left: 1px solid #27272a;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 160;
+        display: flex;
+        flex-direction: column;
+        padding: 24px 20px;
+      }
+      .mobile-menu.open {
+        transform: translateX(0);
+      }
+      .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .mobile-menu-title {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: white;
+      }
+      .mobile-menu-close {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid #3f3f46;
+        background: #18181b;
+        color: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mobile-menu-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 8px;
+      }
+      .mobile-menu-link {
+        font-size: 14px;
+        font-weight: 600;
+        color: #d4d4d8;
+        text-decoration: none;
+        border-bottom: 1px solid #3e3e3e;
+        padding-bottom: 10px;
+      }
+      .mobile-menu-link:hover {
+        color: white;
+      }
+
+      /* --- Footer Style --- */
+      .site-footer {
+        width: 100%;
+        background: var(--footer-bg);
+        border-top: 1px solid #1f2937;
+        padding: 4rem 3rem;
+        z-index: 50;
+        position: relative;
+        margin-top: auto;
+        flex-shrink: 0;
+      }
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        max-width: 1600px;
+        margin: 0 auto;
+        gap: 2rem;
+      }
+      .footer-left h2 {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        background: linear-gradient(to right, #f3f4f6, #6b7280);
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .footer-copyright {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+      .footer-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1rem;
+        text-align: right;
+      }
+      .blog-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #9ca3af;
+        transition: color 0.3s;
+      }
+      .blog-link:hover {
+        color: #2db400;
+      }
+      .blog-link span {
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-thickness: 2px;
+      }
+      .blog-link svg {
+        width: 2rem;
+        height: 2rem;
+        fill: currentColor;
+      }
+      .footer-info {
+        border-top: 1px solid #374151;
+        padding-top: 1rem;
+        margin-top: 0.5rem;
+      }
+      .footer-name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.25rem;
+      }
+      .footer-id {
+        font-size: 0.875rem;
+        font-weight: 400;
+        color: #9ca3af;
+        margin-left: 0.5rem;
+      }
+      .footer-dept {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      /* --- 기존 게임 페이지 스타일 (수정 없음) --- */
+      main {
+        flex: 1 0 auto;
+        padding-top: calc(
+          var(--header-height) + 20px
+        ); /* 헤더 높이만큼 여백 확보 */
+      }
+
+      #canvas-section {
+        padding: 24px 0;
+        opacity: 1;
+        transition: opacity 1s ease;
+      }
+
+      #canvas-container {
+        position: relative;
+        width: 100%;
+        max-width: 1200px;
+        height: min(70vh, 800px);
+        margin: 0 auto;
+        background: #111;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #333;
+      }
+
+      #instruction {
+        position: absolute;
+        top: 15%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        font-size: 30px;
+        text-align: center;
+        padding: 10px 16px;
+        border-radius: 16px;
+        text-shadow: 0 0 10px #fff;
+        z-index: 4;
+        transition: transform 2s ease, opacity 2s ease;
+        font-weight: bold;
+        max-width: 90%;
+        pointer-events: none;
+      }
+
+      #instruction.show {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+
+      .content-section {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 16px 80px;
+        line-height: 1.6;
+        color: #ddd;
+      }
+
+      /* 모달 스타일 */
+      #game-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      #game-modal .modal-content {
+        width: 90%;
+        max-width: 480px;
+        background: #181818;
+        border-radius: 16px;
+        padding: 24px 24px 20px;
+        border: 1px solid #333;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        text-align: center;
+      }
+
+      #game-modal h2 {
+        margin: 0 0 12px;
+        font-size: 20px;
+        font-family: 'GmarketSans', sans-serif;
+        color: white;
+      }
+      #game-modal p {
+        font-size: 14px;
+        color: #ccc;
+        margin: 4px 0;
+      }
+      #game-modal .hint {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #999;
+      }
+
+      #start-btn {
+        margin-top: 18px;
+        width: 100%;
+        padding: 10px 0;
+        border-radius: 999px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #ffd94a, #ffb347);
+        color: #111;
+        cursor: pointer;
+      }
+      #start-btn:hover {
+        filter: brightness(1.05);
+      }
+
+      /* 결과 화면 스타일 */
+      #result-section {
+        margin-top: 150px;
+        display: none;
+        opacity: 0;
+        transition: opacity 1s ease;
+      }
+      #result-section.visible {
+        display: block;
+      }
+      #result-section h2 {
+        margin-top: 0;
+        font-size: 24px;
+        font-family: 'GmarketSans', sans-serif;
+        color: white;
+      }
+      #result-section p.lead {
+        font-size: 15px;
+        color: #e2e2e2;
+        margin-bottom: 32px;
+      }
+
+      .card-grid {
+        margin-top: 60px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+
+      .emotion-card {
+        position: relative;
+        background: #181818;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+        z-index: 1;
+      }
+
+      .emotion-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .emotion-card::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          var(--bg-color) 0%,
+          transparent 70%
+        );
+        transform: translate(-50%, -50%) scale(0.4);
+        opacity: 0.2;
+        transition: transform 0.5s ease, opacity 0.5s ease;
+        z-index: -1;
+      }
+
+      .emotion-card:hover::before {
+        transform: translate(-50%, -50%) scale(2.5);
+        opacity: 0.8;
+      }
+
+      .emotion-card.joy {
+        --bg-color: #ffd94a;
+      }
+      .emotion-card.sadness {
+        --bg-color: #5895ff;
+      }
+      .emotion-card.anger {
+        --bg-color: #ff4a4a;
+      }
+      .emotion-card.fear {
+        --bg-color: #c080ff;
+      }
+      .emotion-card.disgust {
+        --bg-color: #59ff99;
+      }
+
+      .emotion-card img {
+        width: 100%;
+        height: 120px;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+      }
+
+      .emotion-card h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+      }
+      .emotion-card p {
+        margin: 0;
+        font-size: 13px;
+        color: #eee;
+        flex: 1 0 auto;
+        line-height: 1.5;
+      }
+
+      .card-btn {
+        margin-top: 14px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.3);
+        color: #fff;
+        transition: background 0.3s;
+        width: 100%;
+      }
+      .card-btn:hover {
+        background: rgba(0, 0, 0, 0.6);
+      }
+
+      .credits-area {
+        margin-top: 60px;
+        text-align: right;
+        padding-top: 20px;
+        border-top: 1px solid #333;
+      }
+
+      .slogan-text {
+        font-size: 28px;
+        font-weight: 800;
+        color: #555;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+        text-transform: uppercase;
+        font-family: 'GmarketSans', sans-serif;
+      }
+
+      .tech-info {
+        font-size: 14px;
+        color: #888;
+      }
+
+      /* 반응형 */
+      @media (max-width: 1024px) {
+        .desktop-nav {
+          display: none;
+        }
+        .menu-button {
+          display: flex;
+        }
+        .card-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 768px) {
+        .footer-inner {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .footer-right {
+          align-items: center;
+          text-align: center;
+        }
+        .footer-left h2 {
+          font-size: 2.25rem;
+        }
+        .card-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .slogan-text {
+          font-size: 22px;
+        }
+      }
+      @media (max-width: 480px) {
+        .card-grid {
+          grid-template-columns: 1fr;
+        }
+        .credits-area {
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="logo">INSIDE GISANG</a>
+        <nav class="desktop-nav">
+          <a href="profile.html" class="nav-link">Profile</a>
+          <a href="emotion.html" class="nav-link">Emotion Character</a>
+          <a href="core_memories.html" class="nav-link">Core Memories</a>
+          <a href="archive.html" class="nav-link">Archive/Library</a>
+          <a href="arrangement.html" class="nav-link active">Arrangement</a>
+        </nav>
+        <button id="menu-toggle" class="menu-button">
+          <div class="menu-button-lines"></div>
+        </button>
+      </div>
+    </header>
+
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop">
+      <div id="mobile-menu" class="mobile-menu">
+        <div class="mobile-menu-header">
+          <div class="mobile-menu-title">INSIDE GISANG</div>
+          <button id="mobile-menu-close" class="mobile-menu-close">✕</button>
+        </div>
+        <nav class="mobile-menu-nav">
+          <a href="profile.html" class="mobile-menu-link">Profile</a>
+          <a href="emotion.html" class="mobile-menu-link">Emotion Character</a>
+          <a href="core_memories.html" class="mobile-menu-link"
+            >Core Memories</a
+          >
+          <a href="archive.html" class="mobile-menu-link">Archive / Library</a>
+          <a href="arrangement.html" class="mobile-menu-link">Arrangement</a>
+        </nav>
+      </div>
+    </div>
+
+    <div id="game-modal">
+      <div class="modal-content">
+        <h2>감정 정리 시뮬레이터</h2>
+        <p>지금 기상의 머릿속은 과제로 가득 차 있습니다.</p>
+        <p>기쁨 · 슬픔 · 화남 · 소심 · 까칠 감정 구슬이 쏟아집니다.</p>
+        <p>
+          <strong>같은 색 구슬 6개가 모이면</strong> 감정이 정리되며 사라집니다.
+        </p>
+        <p>다섯 감정이 모두 정리되면, 감정의 방으로 이동합니다.</p>
+        <p class="hint">구슬은 드래그해서 움직일 수 있어요.</p>
+        <button id="start-btn">시작하기</button>
+      </div>
+    </div>
+
+    <main>
+      <section id="canvas-section">
+        <div id="canvas-container">
+          <div id="instruction">같은 구슬끼리 한 곳에 모아주세요</div>
+        </div>
+      </section>
+
+      <section id="result-section" class="content-section">
+        <h2>감정 정리 완료</h2>
+        <p class="lead">
+          폭주하던 감정들이 차분히 정리되었습니다. <br />
+          이제, 기상이는 자신의 감정을 이해하고, 그 에너지를 앞으로의 성장에
+          쓰려 합니다.
+        </p>
+
+        <div class="card-grid">
+          <article class="emotion-card joy">
+            <img src="source/yellow.png" alt="기쁨" />
+            <h3>JOY</h3>
+            <p>
+              나를 가장 설레게 하고 에너지를 폭발시키는 순간들. 내가 언제 가장
+              행복한지 기록합니다.
+            </p>
+            <a href="emotion.html" class="card-btn">JOY 캐릭터 분석하기</a>
+          </article>
+
+          <article class="emotion-card sadness">
+            <img src="source/blue.png" alt="슬픔" />
+            <h3>SADNESS</h3>
+            <p>
+              마음이 잠시 가라앉았지만, 덕분에 더 단단해졌던 시간들. 나를 깊게
+              만드는 순간입니다.
+            </p>
+            <a href="emotion.html" class="card-btn">SADNESS 캐릭터 분석하기</a>
+          </article>
+
+          <article class="emotion-card anger">
+            <img src="source/red.png" alt="화남" />
+            <h3>ANGER</h3>
+            <p>
+              ‘이건 꼭 지켜야 해’라는 기준을 알려주는 감정. 내가 지키고 싶은
+              가치를 확인합니다.
+            </p>
+            <a href="emotion.html" class="card-btn">ANGER 캐릭터 분석하기</a>
+          </article>
+
+          <article class="emotion-card fear">
+            <img src="source/purple.png" alt="소심" />
+            <h3>FEAR</h3>
+            <p>
+              새로운 도전 앞에서의 떨림과 불안. 하지만 결국 나아가게 만드는 힘을
+              발견합니다.
+            </p>
+            <a href="emotion.html" class="card-btn">FEAR 캐릭터 분석하기</a>
+          </article>
+
+          <article class="emotion-card disgust">
+            <img src="source/green.png" alt="까칠" />
+            <h3>DISGUST</h3>
+            <p>
+              ‘이건 내 스타일이 아니야’를 구분해주는 감정. 내 취향과 완성도를
+              지키는 선입니다.
+            </p>
+            <a href="emotion.html" class="card-btn">DISGUST 캐릭터 분석하기</a>
+          </article>
+        </div>
+
+        <div class="credits-area">
+          <div class="slogan-text">Fin. Inside Gisang</div>
+          <div class="tech-info">
+            본 페이지는 matter.js 라이브러리를 사용해 제작되었습니다.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <h2>INSIDE<br />GISANG</h2>
+          <p class="footer-copyright">
+            Copyright © 2025 Gi-sang Yu. All rights reserved.
+          </p>
+        </div>
+        <div class="footer-right">
+          <a
+            href="https://blog.naver.com/yu2647921"
+            target="_blank"
+            class="blog-link"
+          >
+            <span>유기상의 기록 보관소</span>
+            <svg viewBox="0 0 24 24" style="transform: scaleX(-1)">
+              <path
+                d="M15.258 7.5H18.75V16.5H15.258V10.9609L12.0234 16.5H8.53125V7.5H12.0156V13.0312L15.258 7.5Z"
+              />
+              <path d="M0 0H24V24H0V0Z" fill="none" />
+            </svg>
+          </a>
+          <div class="footer-info">
+            <p class="footer-name">
+              유기상 <span class="footer-id">22561061</span>
+            </p>
+            <p class="footer-dept">계원예술대학교 디지털미디어디자인과</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script>
+      // --- 모바일 메뉴 로직 추가 ---
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
+      const mobileClose = document.getElementById('mobile-menu-close');
+
+      function openMenu() {
+        mobileMenu.classList.add('open');
+        mobileBackdrop.classList.add('open');
+      }
+      function closeMenu() {
+        mobileMenu.classList.remove('open');
+        mobileBackdrop.classList.remove('open');
+      }
+
+      menuToggle.addEventListener('click', openMenu);
+      mobileClose.addEventListener('click', closeMenu);
+      mobileBackdrop.addEventListener('click', (e) => {
+        if (e.target === mobileBackdrop) closeMenu();
+      });
+
+      // --- 기존 게임 로직 (변경 없음) ---
+      const emotions = [
+        {
+          name: 'joy',
+          color: 'yellow',
+          img: 'joy.png',
+          glow: 'rgba(255, 255, 0, 0.8)',
+        },
+        {
+          name: 'sadness',
+          color: 'blue',
+          img: 'sadness.png',
+          glow: 'rgba(80, 150, 255, 0.8)',
+        },
+        {
+          name: 'anger',
+          color: 'red',
+          img: 'anger.png',
+          glow: 'rgba(255, 60, 60, 0.9)',
+        },
+        {
+          name: 'disgust',
+          color: 'purple',
+          img: 'disgust.png',
+          glow: 'rgba(200, 80, 255, 0.8)',
+        },
+        {
+          name: 'fear',
+          color: 'green',
+          img: 'fear.png',
+          glow: 'rgba(80, 255, 140, 0.8)',
+        },
+      ];
+
+      const {
+        Engine,
+        Render,
+        Runner,
+        Bodies,
+        Composite,
+        Mouse,
+        MouseConstraint,
+        Events,
+        Body,
+      } = Matter;
+
+      const engine = Engine.create();
+      const world = engine.world;
+      engine.world.gravity.y = 1;
+
+      const container = document.getElementById('canvas-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      const render = Render.create({
+        element: container,
+        engine,
+        options: { width, height, wireframes: false, background: '#111' },
+      });
+      Render.run(render);
+
+      const runner = Runner.create();
+      Runner.run(runner, engine);
+
+      let balls = [];
+      const baseRadius = Math.max(
+        40,
+        Math.min(70, Math.min(width, height) * 0.07)
+      );
+      const radius = baseRadius;
+      const MAX_SPEED = 27;
+
+      const clearedEmotions = new Set();
+      const emotionStatus = {};
+      emotions.forEach((e) => (emotionStatus[e.name] = 'ACTIVE'));
+      const instructionEl = document.getElementById('instruction');
+
+      let particles = [];
+      let explosionFragments = [];
+      const FRAGMENT_LIFETIME = 1000;
+
+      function createExplosion(x, y, color) {
+        const numFragments = 10;
+        const fragmentRadius = 15;
+        const initialSpeed = 20;
+
+        for (let i = 0; i < numFragments; i++) {
+          const angle =
+            Math.PI * 2 * (i / numFragments) + Math.random() * 0.5 - 0.25;
+          const fragment = Bodies.circle(x, y, fragmentRadius, {
+            restitution: 0.8,
+            frictionAir: 0.01,
+            mass: 0.1,
+            render: { fillStyle: color, opacity: 1, visible: false },
+            isExplosionFragment: true,
+          });
+
+          fragment.birthTime = Date.now();
+          fragment.lifeDuration = FRAGMENT_LIFETIME;
+          fragment.baseRadius = fragmentRadius;
+          explosionFragments.push(fragment);
+
+          const speed = initialSpeed * (1 + Math.random() * 0.5);
+          const velocityX = speed * Math.cos(angle);
+          const velocityY = speed * Math.sin(angle);
+          Body.setVelocity(fragment, { x: velocityX, y: velocityY });
+          Composite.add(world, fragment);
+
+          particles.push({
+            x,
+            y,
+            vx: velocityX * 0.3,
+            vy: velocityY * 0.3,
+            color,
+            radius: 5 + Math.random() * 5,
+            startTime: Date.now(),
+            duration: 500,
+          });
+        }
+      }
+
+      let endingTriggered = false;
+
+      function startEndingTransition() {
+        Runner.stop(runner);
+        Engine.clear(engine);
+
+        const canvasSection = document.getElementById('canvas-section');
+        const resultSection = document.getElementById('result-section');
+
+        resultSection.classList.add('visible');
+        resultSection.style.opacity = '0';
+        void resultSection.offsetWidth;
+        canvasSection.style.opacity = '0';
+        resultSection.style.opacity = '1';
+
+        setTimeout(() => {
+          canvasSection.style.display = 'none';
+        }, 1000);
+      }
+
+      function checkAllCleared() {
+        if (endingTriggered) return;
+        if (clearedEmotions.size === emotions.length) {
+          endingTriggered = true;
+          setTimeout(() => {
+            startEndingTransition();
+          }, 1500);
+        }
+      }
+
+      function updateClearedEmotions() {
+        const remainingLabels = new Set(balls.map((b) => b.label));
+        emotions.forEach((e) => {
+          if (!remainingLabels.has(e.name) && !clearedEmotions.has(e.name)) {
+            clearedEmotions.add(e.name);
+            emotionStatus[e.name] = 'CLEARED';
+          }
+        });
+        checkAllCleared();
+      }
+
+      function checkClusters() {
+        const n = balls.length;
+        if (n === 0) return;
+        const threshold = radius * 2.05;
+        const visited = new Set();
+        const toRemove = new Set();
+
+        for (let i = 0; i < n; i++) {
+          const start = balls[i];
+          if (!start || visited.has(start) || toRemove.has(start)) continue;
+
+          const queue = [start];
+          const cluster = [];
+          visited.add(start);
+
+          while (queue.length > 0) {
+            const cur = queue.shift();
+            cluster.push(cur);
+
+            for (let j = 0; j < n; j++) {
+              const other = balls[j];
+              if (!other || visited.has(other) || toRemove.has(other)) continue;
+              if (other.label !== cur.label) continue;
+
+              const dx = other.position.x - cur.position.x;
+              const dy = other.position.y - cur.position.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+
+              if (dist < threshold) {
+                visited.add(other);
+                queue.push(other);
+              }
+            }
+          }
+
+          if (cluster.length >= 6) {
+            cluster.forEach((b) => {
+              createExplosion(b.position.x, b.position.y, b.glowColor);
+              toRemove.add(b);
+            });
+          }
+        }
+
+        if (toRemove.size > 0) {
+          balls = balls.filter((b) => {
+            if (toRemove.has(b)) {
+              Composite.remove(world, b);
+              return false;
+            }
+            return true;
+          });
+          updateClearedEmotions();
+        }
+      }
+
+      const wallOptions = { isStatic: true, render: { fillStyle: '#181818' } };
+      Composite.add(world, [
+        Bodies.rectangle(width / 2, height + 25, width, 50, wallOptions),
+        Bodies.rectangle(-25, height / 2, 50, height, wallOptions),
+        Bodies.rectangle(width + 25, height / 2, 50, height, wallOptions),
+      ]);
+
+      const mouse = Mouse.create(render.canvas);
+      const mouseConstraint = MouseConstraint.create(engine, {
+        mouse,
+        constraint: { stiffness: 0.02, render: { visible: false } },
+      });
+      Composite.add(world, mouseConstraint);
+      render.mouse = mouse;
+
+      Events.on(engine, 'afterUpdate', () => {
+        balls.forEach((ball) => {
+          const vx = ball.velocity.x;
+          const vy = ball.velocity.y;
+          const speed = Math.sqrt(vx * vx + vy * vy);
+          if (speed > MAX_SPEED) {
+            const scale = MAX_SPEED / speed;
+            Body.setVelocity(ball, { x: vx * scale, y: vy * scale });
+          }
+        });
+        if (!endingTriggered) checkClusters();
+
+        const now = Date.now();
+        explosionFragments = explosionFragments.filter((fragment) => {
+          const age = now - fragment.birthTime;
+          if (age >= fragment.lifeDuration) {
+            Composite.remove(world, fragment);
+            return false;
+          }
+          return true;
+        });
+      });
+
+      Events.on(render, 'afterRender', () => {
+        const ctx = render.context;
+        const now = Date.now();
+
+        balls.forEach((ball) => {
+          const r = ball.customRadius;
+          const x = ball.position.x;
+          const y = ball.position.y;
+          const glow = ball.glowColor || 'rgba(255,255,255,0.6)';
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.shadowBlur = 40;
+          ctx.shadowColor = glow;
+          ctx.fillStyle = ball.render.fillStyle;
+          ctx.fill();
+          ctx.restore();
+
+          if (
+            ball.emotionImg &&
+            ball.emotionImg.complete &&
+            ball.emotionImg.naturalWidth > 0
+          ) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.drawImage(ball.emotionImg, x - r, y - r, r * 2, r * 2);
+            ctx.restore();
+          }
+        });
+
+        explosionFragments.forEach((fragment) => {
+          const age = now - fragment.birthTime;
+          const t = Math.min(age / fragment.lifeDuration, 1);
+          const lifeRatio = 1 - t;
+          const r = (fragment.baseRadius || 15) * lifeRatio;
+          if (r <= 0) return;
+
+          ctx.save();
+          ctx.globalAlpha = lifeRatio;
+          ctx.beginPath();
+          ctx.arc(fragment.position.x, fragment.position.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = fragment.render.fillStyle || '#fff';
+          ctx.shadowBlur = 20 * lifeRatio;
+          ctx.shadowColor = fragment.render.fillStyle;
+          ctx.fill();
+          ctx.restore();
+        });
+
+        particles = particles.filter((p) => {
+          const elapsed = now - p.startTime;
+          const lifeRatio = 1 - elapsed / p.duration;
+          if (lifeRatio <= 0) return false;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.5;
+          ctx.save();
+          ctx.globalAlpha = lifeRatio * 0.9;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius * lifeRatio, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          return true;
+        });
+      });
+
+      function createBalls() {
+        balls = [];
+        emotions.forEach((emotion) => {
+          for (let i = 0; i < 6; i++) {
+            const x = Math.random() * (width - radius * 2) + radius;
+            const y = -Math.random() * height * 0.8;
+            const ball = Bodies.circle(x, y, radius, {
+              restitution: 0.35,
+              frictionAir: 0.04,
+              render: { fillStyle: emotion.color },
+              label: emotion.name,
+            });
+            ball.customRadius = radius;
+            ball.glowColor = emotion.glow;
+            balls.push(ball);
+            Composite.add(world, ball);
+          }
+        });
+        emotions.forEach((emotion) => {
+          const img = new Image();
+          img.src = emotion.img;
+          img.onload = () => {
+            balls
+              .filter((b) => b.label === emotion.name)
+              .forEach((b) => (b.emotionImg = img));
+          };
+        });
+      }
+
+      let gameStarted = false;
+      const modal = document.getElementById('game-modal');
+      const startBtn = document.getElementById('start-btn');
+
+      startBtn.addEventListener('click', () => {
+        if (gameStarted) return;
+        gameStarted = true;
+        modal.style.display = 'none';
+        createBalls();
+        setTimeout(() => {
+          instructionEl.classList.add('show');
+        }, 3000);
+      });
+    </script>
+  </body>
+</html>

@@ -19,7 +19,7 @@
         --bg-color: #0f0f13;
         --text-white: #ffffff;
         --accent-yellow: #fbbf24;
-        --accent-purple: #a855f7;
+        --accent-purple: #ff1b1b;
         --header-height: 80px;
         --footer-bg: #16161c;
 
@@ -272,7 +272,6 @@
         align-items: center;
         justify-content: center;
         margin-bottom: 5rem;
-        /* 초기 로드 시 애니메이션 */
         opacity: 0;
         transform: translateY(20px);
         animation: fadeUp 0.8s ease forwards;
@@ -339,21 +338,34 @@
         padding-bottom: 10vh;
       }
 
-      /* 🔥 [핵심] 스크롤 애니메이션을 위한 클래스 */
-      /* 기본 상태: 숨겨져 있고 아래에 위치 */
+      /* 한 줄: 섬 + 텍스트 */
+      .island-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 3rem;
+      }
+      .island-row-left {
+        justify-content: flex-start; /* 섬 왼쪽, 텍스트 오른쪽 */
+      }
+      .island-row-right {
+        justify-content: center;
+        flex-direction: row-reverse; /* 섬 오른쪽, 텍스트 왼쪽 */
+      }
+
+      /* 스크롤 애니메이션 (row 전체에 적용) */
       .scroll-hidden {
         opacity: 0;
         transform: translateY(100px);
         transition: opacity 0.8s ease-out, transform 0.8s ease-out;
       }
-
-      /* 활성 상태: 보이고 제자리로 이동 */
       .scroll-visible {
         opacity: 1;
         transform: translateY(0);
       }
 
-      /* Island Item Styles */
+      /* Island Item Styles (원본 크기 유지) */
       .island-item {
         position: relative;
         width: 600px;
@@ -363,14 +375,13 @@
         justify-content: center;
         text-align: center;
         cursor: pointer;
-        /* hover 시 scale 트랜지션은 별도로 적용 */
         transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
           opacity 0.8s ease-out;
       }
 
-      /* Hover시 커짐 */
-      .island-item.scroll-visible:hover {
-        transform: scale(1.1); /* active 상태일 때만 호버 작동 */
+      /* Hover시 커짐 - row가 보이는 상태일 때만 */
+      .scroll-visible .island-item:hover {
+        transform: scale(1.1);
         z-index: 20;
       }
 
@@ -398,18 +409,15 @@
         filter: drop-shadow(0 0 40px var(--food-glow));
       }
 
-      /* Positioning */
+      /* 지그재그 느낌 유지용 (위치 약간 조정용 여유) */
       .island-coding {
         align-self: flex-start;
-        margin-left: 00%;
       }
       .island-food {
         align-self: flex-end;
-        margin-right: 00%;
       }
       .island-travel {
         align-self: flex-start;
-        margin-left: 0%;
       }
 
       /* Labels */
@@ -426,6 +434,39 @@
         margin-top: 0.5rem;
         opacity: 0.9;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+      }
+
+      /* 섬 옆 텍스트 (색/선/박스 없이) */
+      .island-text {
+        max-width: 420px;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: #e5e7eb;
+      }
+      .island-text-title {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: #e5e7eb;
+      }
+      .island-text-tag {
+        display: inline-block;
+        margin-bottom: 0.75rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #9ca3af;
+      }
+      .island-text-body {
+        word-break: keep-all;
+      }
+
+      .island-row-left .island-text {
+        text-align: left;
+      }
+      .island-row-right .island-text {
+        text-align: right;
       }
 
       /* Modal */
@@ -509,13 +550,27 @@
         .islands-scroll-layout {
           gap: 10vh;
         }
+
+        .island-row {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+
         .island-item {
           width: 200px;
-          margin: 0 auto !important;
-          align-self: center !important;
         }
+
+        .island-text {
+          max-width: 100%;
+          text-align: center !important;
+        }
+
         .island-label {
           font-size: 1.4rem;
+        }
+        .island-text {
+          display: none;
         }
       }
 
@@ -637,7 +692,7 @@
           <a href="emotion.html" class="nav-link">Emotion Character</a>
           <a href="core_memories.html" class="nav-link">Core Memories</a>
           <a href="archive.html" class="nav-link">Archive/Library</a>
-          <a href="timeline.html" class="nav-link">Timeline</a>
+          <a href="arrangement.html" class="nav-link">Arrangement</a>
         </nav>
         <button id="menu-toggle" class="menu-button">
           <div class="menu-button-lines"></div>
@@ -652,7 +707,7 @@
           <button id="mobile-menu-close" class="mobile-menu-close">✕</button>
         </div>
         <nav class="mobile-menu-nav">
-          <a href="profile.html" class="mobile-menu-link" style="color: #a855f7"
+          <a href="profile.html" class="mobile-menu-link" style="color: #ff1b1b"
             >Profile</a
           >
           <a href="emotion.html" class="mobile-menu-link">Emotion Character</a>
@@ -660,7 +715,7 @@
             >Core Memories</a
           >
           <a href="archive.html" class="mobile-menu-link">Archive / Library</a>
-          <a href="timeline.html" class="mobile-menu-link">Timeline</a>
+          <a href="arrangement.html" class="mobile-menu-link">Arrangement</a>
         </nav>
       </div>
     </div>
@@ -670,7 +725,7 @@
 
       <section class="intro-section">
         <div class="profile-img-box">
-          <img src="기상.jpg" alt="Gi-sang Yu Profile" />
+          <img src="기상.png" alt="Gi-sang Yu Profile" />
         </div>
         <div class="profile-info">
           <h1 class="intro-name">유기상</h1>
@@ -691,37 +746,93 @@
         <h2 class="islands-title">MY ISLANDS</h2>
 
         <div class="islands-scroll-layout">
-          <div
-            class="island-item island-coding scroll-hidden"
-            onclick="openModal('coding')"
-          >
-            <div class="island-icon">
-              <img src="coding.png" alt="Coding Island" />
+          <!-- 코딩 섬 : 왼쪽 섬 / 오른쪽 텍스트 -->
+          <div class="island-row island-row-left scroll-hidden">
+            <div
+              class="island-item island-coding"
+              onclick="openModal('coding')"
+            >
+              <div class="island-icon">
+                <img src="coding.png" alt="Coding Island" />
+              </div>
+              <span class="island-label">코딩</span>
+              <span class="island-sub">Logic &amp; Build</span>
             </div>
-            <span class="island-label">코딩</span>
-            <span class="island-sub">Logic & Build</span>
+
+            <div class="island-text">
+              <div class="island-text-tag">MAIN ENGINE</div>
+              <h3 class="island-text-title">생각을 화면으로 옮기는 공장</h3>
+              <p class="island-text-body">
+                인사이드 기상에서 코딩 섬은 가장 먼저 불이 켜지는 곳입니다.
+                <br /><br />
+                레이아웃이 깨지고 콘솔에 에러가 떠도, 결국엔
+                <strong>"왜 안 되지?"</strong>가 아니라
+                <strong>"어떻게든 되게 해보자"</strong>로 끝나는 타입입니다.
+                HTML, CSS, JavaScript를 기본으로, 새로운 기술 스택도 계속
+                시도합니다. <br /><br />
+                이 섬에서 짜여진 코드들은 다른 모든 섬과 연결되어, 여행도,
+                음식도, 기억들도 하나의 인터랙티브 웹 경험으로 묶입니다.
+              </p>
+            </div>
           </div>
 
-          <div
-            class="island-item island-food scroll-hidden"
-            onclick="openModal('food')"
-          >
-            <div class="island-icon">
-              <img src="food.png" alt="Food Island" />
+          <!-- 음식 섬 : 오른쪽 섬 / 왼쪽 텍스트 -->
+          <div class="island-row island-row-right scroll-hidden">
+            <div class="island-item island-food" onclick="openModal('food')">
+              <div class="island-icon">
+                <img src="food.png" alt="Food Island" />
+              </div>
+              <span class="island-label">음식</span>
+              <span class="island-sub">Taste of Life</span>
             </div>
-            <span class="island-label">음식</span>
-            <span class="island-sub">Taste of Life</span>
+
+            <div class="island-text">
+              <div class="island-text-tag">DAILY FUEL</div>
+              <h3 class="island-text-title">
+                하루를 저장하는 가장 맛있는 방법
+              </h3>
+              <p class="island-text-body">
+                "오늘 뭐 먹지?"는 제 하루를 움직이는 중요한 질문입니다.
+                <br /><br />
+                혼자 먹는 라면도, 친구들과 웃으면서 먹는 야식도 전부 기억으로
+                쌓입니다. 새로운 맛집을 발견하면 사진과 메모를 남겨두고,
+                언젠가는
+                <strong>'기슐랭 가이드'</strong>로 정리하려고 합니다.
+                <br /><br />
+                이 섬에서 만들어지는 식탁의 순간들은 감정과 기억 섬으로 이동해,
+                특정 날의 기분과 온도를 떠올리게 하는 작은 트리거가 됩니다.
+              </p>
+            </div>
           </div>
 
-          <div
-            class="island-item island-travel scroll-hidden"
-            onclick="openModal('travel')"
-          >
-            <div class="island-icon">
-              <img src="travel.png" alt="Travel Island" />
+          <!-- 여행 섬 : 왼쪽 섬 / 오른쪽 텍스트 -->
+          <div class="island-row island-row-left scroll-hidden">
+            <div
+              class="island-item island-travel"
+              onclick="openModal('travel')"
+            >
+              <div class="island-icon">
+                <img src="travel.png" alt="Travel Island" />
+              </div>
+              <span class="island-label">여행</span>
+              <span class="island-sub">New Experience</span>
             </div>
-            <span class="island-label">여행</span>
-            <span class="island-sub">New Experience</span>
+
+            <div class="island-text">
+              <div class="island-text-tag">INSPIRATION SOURCE</div>
+              <h3 class="island-text-title">익숙한 세계 밖으로 나가는 버튼</h3>
+              <p class="island-text-body">
+                루틴이 답답해질 때마다, 여행 섬은 저를 바깥으로 밀어 올립니다.
+                <br /><br />
+                공항의 소음, 도시의 간판, 지하철 노선도, 사람들의 말투와
+                제스처까지 모두 다음 프로젝트의 레퍼런스가 됩니다. 카메라는 항상
+                함께하는 필수 장비이고, 마음에 남는 장면은 사진과 영상으로
+                기록합니다.
+                <br /><br />
+                이 섬에서 수집한 풍경과 사람들의 이야기는, 나중에 다른 페이지와
+                프로젝트에서 세계관을 확장시키는 중요한 재료가 됩니다.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -751,7 +862,10 @@
             class="blog-link"
           >
             <span>유기상의 기록 보관소</span>
-            <svg viewBox="0 0 24 24">
+            <svg
+              viewBox="0 0 24 24"
+              style="transform: scaleX(-1) translateY(-5px)"
+            >
               <path
                 d="M15.258 7.5H18.75V16.5H15.258V10.9609L12.0234 16.5H8.53125V7.5H12.0156V13.0312L15.258 7.5Z"
               />
@@ -832,27 +946,25 @@
       });
 
       // 3. Scroll Animation Logic (Intersection Observer)
-      // 화면에 요소가 나타나면 .scroll-visible 클래스를 추가하여 애니메이션 실행
+      // 한 줄(row)이 화면에 나타나면 .scroll-visible 추가 → 섬 + 텍스트 같이 등장
       const observerOptions = {
-        root: null, // viewport
+        root: null,
         rootMargin: '0px',
-        threshold: 0.5, // 요소가 30% 보이면 실행
+        threshold: 0.5,
       };
 
-      const observer = new IntersectionObserver((entries, observer) => {
+      const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('scroll-visible');
-            // 한 번 나타나면 다시 감시할 필요 없음 (원한다면 주석 해제)
-            // observer.unobserve(entry.target);
+            // observer.unobserve(entry.target); // 필요하면 활성화
           }
         });
       }, observerOptions);
 
-      // 모든 .island-item을 감시
-      const islands = document.querySelectorAll('.island-item');
-      islands.forEach((island) => {
-        observer.observe(island);
+      const rows = document.querySelectorAll('.island-row');
+      rows.forEach((row) => {
+        observer.observe(row);
       });
     </script>
   </body>

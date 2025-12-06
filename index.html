@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>인사이드 기상 - 장기 기억 저장소</title>
+    <title>INSIDE GISANG - Home</title>
 
-    <!-- 폰트: Pretendard, GmarketSans -->
+    <!-- 폰트 -->
     <link
       rel="stylesheet"
       as="style"
@@ -13,206 +13,103 @@
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
     />
 
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
     <style>
       @import url('https://webfontworld.github.io/gmarket/GmarketSans.css');
 
-      body {
-        font-family: 'Pretendard', sans-serif;
-        background-color: #0f0f13;
-        color: white;
-        overflow: hidden; /* 전체 스크롤 방지 */
+      :root {
+        --bg-color: #0f0f13;
+        --text-white: #ffffff;
+        --accent-yellow: #fbbf24;
+        --accent-purple: #a855f7;
+        --header-height: 80px;
+        --footer-bg: #16161c;
+      }
+
+      * {
+        box-sizing: border-box;
         margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100vh;
+        background-color: var(--bg-color);
+        color: var(--text-white);
+        font-family: 'Pretendard', sans-serif;
+        overflow-x: hidden;
+      }
+
+      html::-webkit-scrollbar {
+        display: none;
+      }
+      body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: inherit;
       }
 
       .font-title {
         font-family: 'GmarketSans', sans-serif;
       }
 
-      /* 스크롤바 커스텀 */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #1a1a1a;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #444;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #666;
-      }
-
-      /* --- 구슬 (Marble) 스타일 --- */
-      .marble {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        margin: 0 auto;
-        position: relative;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        background: radial-gradient(
-          circle at 30% 30%,
-          rgba(255, 255, 255, 0.9),
-          rgba(255, 255, 255, 0.1) 25%,
-          transparent 60%
-        );
-        box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.5),
-          inset 2px 2px 5px rgba(255, 255, 255, 0.3);
-        /* overflow: hidden; */
-      }
-
-      .shelf-row {
-        border-bottom: 2px solid #333;
-        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
-        position: absolute;
-        bottom: 5px;
-        left: 0;
+      /* --- Header --- */
+      .site-header {
+        height: var(--header-height);
         width: 100%;
-        z-index: -1;
-      }
-
-      .marble.active {
-        cursor: pointer;
-        z-index: 10;
-        opacity: 1;
-        filter: grayscale(0%);
-        position: relative;
-      }
-
-      .marble.active:hover {
-        transform: scale(1.1) translateY(-10px);
-        z-index: 20;
-        box-shadow: 0 0 40px rgba(255, 255, 255, 0.625) !important;
-        /* inset -5px -5px 10px rgba(0, 0, 0, 0.5); */
-      }
-      /* 이미지 */
-      .marble.active::before {
-        content: '';
-        position: absolute;
+        background: var(--bg-color);
+        border-bottom: 1px solid #1f2937;
+        position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: var(--memory-image);
-        background-size: cover;
-        background-position: center;
-        opacity: 0.7;
-        filter: blur(1px);
-        mix-blend-mode: overlay;
-        z-index: -1;
-        border-radius: 999px;
-      }
-
-      .marble.inactive {
-        cursor: default;
-        opacity: 0.3;
-        filter: grayscale(40%) saturate(60%);
-      }
-
-      .marble.yellow {
-        background-color: #ffd900a5;
-      }
-      .marble.active.yellow {
-        box-shadow: 0 0 15px #ffd900a5, inset -5px -5px 10px rgba(0, 0, 0, 0.2);
-      }
-
-      .marble.blue {
-        background-color: #4169e1;
-      }
-      .marble.active.blue {
-        box-shadow: 0 0 15px #4169e1, inset -5px -5px 10px rgba(0, 0, 0, 0.3);
-      }
-
-      .marble.red {
-        background-color: #ff4d4d;
-      }
-      .marble.active.red {
-        box-shadow: 0 0 15px #ff4d4d, inset -5px -5px 10px rgba(0, 0, 0, 0.3);
-      }
-
-      .marble.green {
-        background-color: #32cd32;
-      }
-      .marble.active.green {
-        box-shadow: 0 0 15px #32cd32, inset -5px -5px 10px rgba(0, 0, 0, 0.3);
-      }
-
-      .marble.purple {
-        background-color: #9370db;
-      }
-      .marble.active.purple {
-        box-shadow: 0 0 15px #9370db, inset -5px -5px 10px rgba(0, 0, 0, 0.3);
-      }
-
-      .tooltip {
-        position: absolute;
-        top: -45px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.8);
-        padding: 6px 10px;
-        border-radius: 6px;
-        font-size: 12px;
-        white-space: nowrap;
-        transition: opacity 0.2s;
         z-index: 100;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        font-weight: bold;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        color: white !important;
-        opacity: 0;
+        backdrop-filter: blur(10px);
       }
-      .marble.active:hover .tooltip {
-        opacity: 1;
+      .header-inner {
+        height: 100%;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
-
-      .modal-enter {
-        opacity: 0;
-        transform: scale(0.9);
+      .logo {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        transition: color 0.3s;
       }
-      .modal-enter-active {
-        opacity: 1;
-        transform: scale(1);
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .modal-exit {
-        opacity: 1;
-        transform: scale(1);
-      }
-      .modal-exit-active {
-        opacity: 0;
-        transform: scale(0.9);
-        transition: opacity 0.2s;
+      .logo:hover {
+        color: var(--accent-purple);
       }
 
-      .nav-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        color: rgba(255, 255, 255, 0.4);
-        transition: all 0.3s;
-        z-index: 60;
-        padding: 20px;
-        border-radius: 50%;
+      .desktop-nav {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.875rem;
+        font-weight: 700;
       }
-      .nav-btn:hover:not(:disabled) {
-        color: white;
-        background-color: rgba(255, 255, 255, 0.1);
-        scale: 1.1;
-      }
-      .nav-btn:disabled {
-        opacity: 0.1;
-        cursor: not-allowed;
-      }
-
       .nav-link {
         position: relative;
         color: #9ca3af;
         transition: color 0.3s;
       }
-      .nav-link:hover {
-        color: #fff;
+      .nav-link:hover,
+      .nav-link.active {
+        color: white;
       }
       .nav-link::after {
         content: '';
@@ -221,27 +118,29 @@
         height: 2px;
         bottom: -4px;
         left: 0;
-        background-color: #a855f7;
+        background-color: var(--accent-purple);
         transition: width 0.3s;
       }
-      .nav-link:hover::after {
+      .nav-link:hover::after,
+      .nav-link.active::after {
         width: 100%;
       }
 
-      /* 햄버거 버튼 */
+      /* Mobile Menu Button */
       .menu-button {
-        display: none !important; /* 기본은 숨김 (PC) */
+        display: none;
         width: 40px;
         height: 40px;
         border-radius: 999px;
         border: 1px solid #3f3f46;
         background: #18181b;
-        display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
       }
-      .menu-button-lines {
+      .menu-button-lines,
+      .menu-button-lines::before,
+      .menu-button-lines::after {
         width: 18px;
         height: 2px;
         background: #e5e7eb;
@@ -252,9 +151,6 @@
         content: '';
         position: absolute;
         left: 0;
-        width: 18px;
-        height: 2px;
-        background: #e5e7eb;
       }
       .menu-button-lines::before {
         top: -6px;
@@ -263,34 +159,32 @@
         top: 6px;
       }
 
-      /* 모바일 메뉴 백드롭 */
+      /* Mobile Menu */
       .mobile-menu-backdrop {
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.7);
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.3s ease;
-        z-index: 80;
+        transition: opacity 0.3s;
+        z-index: 150;
       }
       .mobile-menu-backdrop.open {
         opacity: 1;
         pointer-events: auto;
       }
 
-      /* 모바일 메뉴 패널 */
       .mobile-menu {
         position: fixed;
         top: 0;
         right: 0;
         height: 100vh;
         width: 260px;
-        max-width: 80%;
         background: #111118;
         border-left: 1px solid #27272a;
         transform: translateX(100%);
         transition: transform 0.3s ease;
-        z-index: 90;
+        z-index: 160;
         display: flex;
         flex-direction: column;
         padding: 24px 20px;
@@ -298,33 +192,31 @@
       .mobile-menu.open {
         transform: translateX(0);
       }
-
       .mobile-menu-header {
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 24px;
       }
       .mobile-menu-title {
         font-family: 'GmarketSans', sans-serif;
         font-size: 18px;
         font-weight: 700;
+        color: white;
       }
       .mobile-menu-close {
         width: 32px;
         height: 32px;
-        border-radius: 999px;
+        border-radius: 50%;
         border: 1px solid #3f3f46;
         background: #18181b;
+        color: #e5e7eb;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
-        color: #e5e7eb;
       }
-
       .mobile-menu-nav {
-        display: flex !important;
+        display: flex;
         flex-direction: column;
         gap: 16px;
         margin-top: 8px;
@@ -334,154 +226,278 @@
         font-weight: 600;
         color: #d4d4d8;
         text-decoration: none;
-        border-bottom: 1px solid rgb(62, 62, 62);
+        border-bottom: 1px solid #3e3e3e;
         padding-bottom: 10px;
       }
       .mobile-menu-link:hover {
-        color: #ffffff;
+        color: white;
       }
 
-      /* 반응형 - 태블릿/모바일 */
-      @media (min-width: 400px) and (max-width: 1200px) {
-        nav,
-        aside {
-          display: none !important;
-        }
-
-        main {
-          width: 100% !important;
-        }
-
-        .menu-button {
-          display: flex !important; /* 이 구간에서 햄버거 버튼 보이게 */
-        }
-        .h-32 {
-          height: 5rem !important;
-        }
-        .marble {
-          width: 60px !important;
-          height: 60px !important;
-        }
-        footer {
-          text-align: center !important;
-        }
-        /* .marble.active {
-          width: 0px !important;
-          height: 60px !important;
-        } */
-
-        body {
-          width: 100% !important;
-          overflow-x: hidden !important;
-        }
-        #archive-container {
-          overflow-x: hidden !important;
-        }
+      /* --- Home Main (Index) --- */
+      .home-main {
+        width: 100%;
+        min-height: 250vh;
+        position: relative;
+        padding-top: calc(var(--header-height) + 80px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: var(--bg-color);
       }
 
-      @media (max-width: 400px) {
-        /* 0~400에서도 햄버거 보이게 */
-        nav,
-        aside {
-          display: none !important;
+      .home-hero-area {
+        text-align: center;
+        margin-bottom: 4rem;
+        opacity: 0;
+        animation: fadeDown 1s ease forwards 0.5s;
+      }
+      .home-title {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+      .home-desc {
+        color: #9ca3af;
+        font-size: 1.1rem;
+      }
+
+      /* --- Shape Container --- */
+      .shape-container {
+        position: relative;
+        width: 100%;
+        max-width: 850px;
+        aspect-ratio: 197.43 / 559.09;
+        margin-bottom: 150px;
+      }
+
+      /* 1. Masked Image */
+      .masked-image-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+
+        background-image: url('pixar2.jpg');
+        background-attachment: fixed;
+        background-position: 20%, center;
+        background-size: 80%;
+        background-repeat: no-repeat;
+
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out;
+
+        /* Mask Image (SVG Path와 동일) */
+        -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 197.43 559.09'%3E%3Cpath d='M154.4,261.95c-.71,1.07-1.56,1.98-2.59,2.66-.66.44-1.41.85-1.7,1.59-.25.62-.09,1.32.06,1.97,2.8,11.81,5.61,23.62,8.41,35.43,3.47,14.62,7.24,31.6,13.78,45.24,4.56,9.49,4.13,24.67-.12,34.24-2.01,4.53-7.62,5.85-7.98,7.06-.31,1.04.82,2.65.61,3.74-.55,2.79-2.84,6.59-3.46,9.37-6.34,28.55-1.42,58.41-4.17,87.71.02,2.72,3.41,4.89,3.68,7.17s-2.22,5.5-1.28,7.38c4.84,9.62,32.55,8.54,28.57,24.29-3.01,11.91-32.69,5.89-39.94,3.13-4.95-1.88-16.76-12.76-20.19-11.94-3.03.72-10.01,13.02-13.92,14.99-1.8,6.31-13.28,17.39-18.98,20.01-.85.39-16.11,2.31-18.49,2.5-5.54.42-10.53-.07-13.54-5.42-1.01-1.78-2.87-16.9-2.98-20.01-.19-5.11.6-9.56,1.04-14.54l-9.02-.48c-1.46-4.29-5.66-9.33-6.54-13.46-1.55-7.27-.27-17.67-1.55-25.45-1.26-7.69-5.49-14.87-6.77-23.22s-.02-18.78-1.36-26.64c-.53-3.13-2.75-5.69-3.49-8.51-4.23-16-3.5-37.08-8.52-51.48-1.16-3.33-5.49-6.13-6.68-11.32-2.47-10.84,2.53-14.15,2.82-23.03.18-5.55-1.43-15.57-.87-20.78.39-3.59,4.47-8.01,4.81-10.3.92-6.23-1.69-16.98.25-23.54,3.02-10.15,2.93-11.2,3.97-22.2.19-1.98,1.95-3.52,1.93-5.08-.03-2.51-4.15-3.94-4.79-6.18-.72-2.52.34-5.27-.94-8.06s-4.75-2.81-5.11-3.38c-.82-1.3.6-4.86-.62-6.91h-3.4c-1.25-3.76-3.35-7.25-4.67-10.99-.57-1.62.37-3.2-.19-4.68-1.2-3.17-7.06-6.59-8.08-12.03-.59-3.14,1.17-6.22.87-9.74-.28-3.26-2.65-5.18-2.74-7.79-.2-5.76,3.91-10.89,4.39-14.37.57-4.04-1.27-12.2-.67-15.76,1.58-9.42,9.27-22.07,13.51-30.53,6.07-12.11,5.02-16.43,17.76-24.23,6.29-3.85,12.8-7.31,19.35-10.69,3.41-1.76,6.82-3.51,10.23-5.26,1.62-.83,5.82-1.74,6.93-3.13.26-.32-11.35-7.25-12.34-7.84-2.64-1.57-2.76-5.37-4.19-7.81-1.94-3.32-4.71-5.33-4.91-9.59-.05-1.07,1.63-2.41,1.6-3.98s-2.29-2.94-2.09-5.99c.14-2.13,1.66-3.1,1.9-4.26,1.05-5.16.4-10.47.86-15.68.52-5.89,2.87-10.21,5.47-15.46.18-.37.38-.76.72-1,.31-.23.71-.3,1.09-.39,1.87-.44,3.55-1.45,5.26-2.32C74.51.31,85.53-.63,95.45,1.8c6.8,1.67,20.64,8.65,23.93,15.06,7.02,13.7-1.81,26.52-5.14,39.25-3.71,14.18,2.51,21.83,15.2,26.87,16.56,6.57,33.83,12.08,44.04,27.78,10.44,16.05,12.43,36.52,18.66,54.31,2.59,7.39,6.76,9.22,3.73,17.66-2.46,6.84-14.23,26.82-19.76,31.23-2.99,2.38-15.65,7.86-16.44,9.56-1.01,2.15-.09,4.43-.54,6.46-1.63,7.48-.54,7.96-.97,15.03-.3,4.84-.72,12.34-3.76,16.93ZM103.18,470.5c-.4-11.11.56-22.38,0-33.48-.9-17.79-2.67-36.19-4-53.99-.68-9.07-2.88-18.39-3.48-27.5-1.54,1.22-1.9.38-2.56,2.5-3.61,11.63.45,15.14.1,25.02-.23,6.46-3.66,10.83-4.09,16.94,3.84,16.7,8.86,34.04,11.03,51.04.71,5.57.34,12.51,1.01,18.01.18,1.48.79,3.06,2,1.47Z' fill='black'/%3E%3C/svg%3E");
+        -webkit-mask-size: 100% 100%;
+        -webkit-mask-repeat: no-repeat;
+        mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 197.43 559.09'%3E%3Cpath d='M154.4,261.95c-.71,1.07-1.56,1.98-2.59,2.66-.66.44-1.41.85-1.7,1.59-.25.62-.09,1.32.06,1.97,2.8,11.81,5.61,23.62,8.41,35.43,3.47,14.62,7.24,31.6,13.78,45.24,4.56,9.49,4.13,24.67-.12,34.24-2.01,4.53-7.62,5.85-7.98,7.06-.31,1.04.82,2.65.61,3.74-.55,2.79-2.84,6.59-3.46,9.37-6.34,28.55-1.42,58.41-4.17,87.71.02,2.72,3.41,4.89,3.68,7.17s-2.22,5.5-1.28,7.38c4.84,9.62,32.55,8.54,28.57,24.29-3.01,11.91-32.69,5.89-39.94,3.13-4.95-1.88-16.76-12.76-20.19-11.94-3.03.72-10.01,13.02-13.92,14.99-1.8,6.31-13.28,17.39-18.98,20.01-.85.39-16.11,2.31-18.49,2.5-5.54.42-10.53-.07-13.54-5.42-1.01-1.78-2.87-16.9-2.98-20.01-.19-5.11.6-9.56,1.04-14.54l-9.02-.48c-1.46-4.29-5.66-9.33-6.54-13.46-1.55-7.27-.27-17.67-1.55-25.45-1.26-7.69-5.49-14.87-6.77-23.22s-.02-18.78-1.36-26.64c-.53-3.13-2.75-5.69-3.49-8.51-4.23-16-3.5-37.08-8.52-51.48-1.16-3.33-5.49-6.13-6.68-11.32-2.47-10.84,2.53-14.15,2.82-23.03.18-5.55-1.43-15.57-.87-20.78.39-3.59,4.47-8.01,4.81-10.3.92-6.23-1.69-16.98.25-23.54,3.02-10.15,2.93-11.2,3.97-22.2.19-1.98,1.95-3.52,1.93-5.08-.03-2.51-4.15-3.94-4.79-6.18-.72-2.52.34-5.27-.94-8.06s-4.75-2.81-5.11-3.38c-.82-1.3.6-4.86-.62-6.91h-3.4c-1.25-3.76-3.35-7.25-4.67-10.99-.57-1.62.37-3.2-.19-4.68-1.2-3.17-7.06-6.59-8.08-12.03-.59-3.14,1.17-6.22.87-9.74-.28-3.26-2.65-5.18-2.74-7.79-.2-5.76,3.91-10.89,4.39-14.37.57-4.04-1.27-12.2-.67-15.76,1.58-9.42,9.27-22.07,13.51-30.53,6.07-12.11,5.02-16.43,17.76-24.23,6.29-3.85,12.8-7.31,19.35-10.69,3.41-1.76,6.82-3.51,10.23-5.26,1.62-.83,5.82-1.74,6.93-3.13.26-.32-11.35-7.25-12.34-7.84-2.64-1.57-2.76-5.37-4.19-7.81-1.94-3.32-4.71-5.33-4.91-9.59-.05-1.07,1.63-2.41,1.6-3.98s-2.29-2.94-2.09-5.99c.14-2.13,1.66-3.1,1.9-4.26,1.05-5.16.4-10.47.86-15.68.52-5.89,2.87-10.21,5.47-15.46.18-.37.38-.76.72-1,.31-.23.71-.3,1.09-.39,1.87-.44,3.55-1.45,5.26-2.32C74.51.31,85.53-.63,95.45,1.8c6.8,1.67,20.64,8.65,23.93,15.06,7.02,13.7-1.81,26.52-5.14,39.25-3.71,14.18,2.51,21.83,15.2,26.87,16.56,6.57,33.83,12.08,44.04,27.78,10.44,16.05,12.43,36.52,18.66,54.31,2.59,7.39,6.76,9.22,3.73,17.66-2.46,6.84-14.23,26.82-19.76,31.23-2.99,2.38-15.65,7.86-16.44,9.56-1.01,2.15-.09,4.43-.54,6.46-1.63,7.48-.54,7.96-.97,15.03-.3,4.84-.72,12.34-3.76,16.93ZM103.18,470.5c-.4-11.11.56-22.38,0-33.48-.9-17.79-2.67-36.19-4-53.99-.68-9.07-2.88-18.39-3.48-27.5-1.54,1.22-1.9.38-2.56,2.5-3.61,11.63.45,15.14.1,25.02-.23,6.46-3.66,10.83-4.09,16.94,3.84,16.7,8.86,34.04,11.03,51.04.71,5.57.34,12.51,1.01,18.01.18,1.48.79,3.06,2,1.47Z' fill='black'/%3E%3C/svg%3E");
+        mask-size: 100% 100%;
+        mask-repeat: no-repeat;
+      }
+
+      @media (max-width: 1600px) and (min-width: 1325px) {
+        .masked-image-layer {
+          background-size: 100%;
         }
-        main {
-          width: 100% !important;
+      }
+      @media (max-width: 1324px) and (min-width: 968px) {
+        .masked-image-layer {
+          background-position: center;
+          background-size: 120%;
         }
-        .menu-button {
-          display: flex !important;
-        }
-        .h-32 {
-          height: 3rem !important;
-        }
-        .marble {
-          width: 30px !important;
-          height: 30px !important;
-        }
-        .marble.active {
-          width: 40px !important;
-          height: 40px !important;
-        }
-        /* .tooltip {
-          opacity: 1 !important;
-          top: -2rem !important;
-          scale: calc(0.7) !important;
-          transform: translateX(-70%) !important;
-        } */
-        footer {
-          text-align: center !important;
-        }
-        footer .text-right {
-          text-align: center !important;
-          margin: 0px auto !important;
-        }
-        .border-t {
-          text-align: center !important;
-        }
-        body {
-          width: 100% !important;
-          overflow-x: hidden !important;
-        }
-        #archive-container {
-          overflow-x: hidden !important;
+      }
+      @media (max-width: 967px) {
+        .masked-image-layer {
+          background-position: center;
+          background-size: cover;
         }
       }
 
-      /* PC 사이즈 - 모바일 메뉴는 안 보이지만, 혹시 열려있으면 감추기 */
-      @media (min-width: 1200px) {
-        .mobile-menu-backdrop,
-        .mobile-menu {
+      /* 2. SVG Stroke Layer (선) */
+      .stroke-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 5;
+        pointer-events: none;
+      }
+      .stroke-path {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: 1;
+        animation: 5.5s effect forwards;
+      }
+      @keyframes effect {
+        0% {
+          opacity: 1;
+        }
+        70% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* --- Footer --- */
+      .site-footer {
+        width: 100%;
+        background: var(--footer-bg);
+        border-top: 1px solid #1f2937;
+        padding: 4rem 3rem;
+        z-index: 50;
+        position: relative;
+        margin-top: auto;
+      }
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        max-width: 1600px;
+        margin: 0 auto;
+        gap: 2rem;
+      }
+      .footer-left h2 {
+        font-family: 'GmarketSans', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        background: linear-gradient(to right, #f3f4f6, #6b7280);
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .footer-copyright {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+
+      .footer-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1rem;
+        text-align: right;
+      }
+      .blog-link {
+        display: inline-flex;
+        items-center: center;
+        gap: 0.5rem;
+        color: #9ca3af;
+        transition: color 0.3s;
+      }
+      .blog-link:hover {
+        color: #2db400;
+      }
+      .blog-link span {
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-thickness: 2px;
+      }
+      .blog-link svg {
+        width: 2rem;
+        height: 2rem;
+        fill: currentColor;
+      }
+
+      .footer-info {
+        border-top: 1px solid #374151;
+        padding-top: 1rem;
+        margin-top: 0.5rem;
+      }
+      .footer-name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.25rem;
+      }
+      .footer-id {
+        font-size: 0.875rem;
+        font-weight: 400;
+        color: #9ca3af;
+        margin-left: 0.5rem;
+      }
+      .footer-dept {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      @media (max-width: 768px) {
+        .footer-inner {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .footer-right {
+          align-items: center;
+          text-align: center;
+        }
+        .footer-left h2 {
+          font-size: 2.25rem;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .desktop-nav {
           display: none;
+        }
+        .menu-button {
+          display: flex;
+        }
+        .shape-container {
+          width: 90%;
+          max-width: 350px;
         }
       }
     </style>
-
-    <!-- Tailwind CSS (나중에 완전 제거 예정이면 유지/삭제 선택) -->
-    <script src="https://cdn.tailwindcss.com"></script>
   </head>
 
-  <body class="flex flex-col h-screen w-screen bg-[#0f0f13]">
-    <!-- 상단 헤더 -->
-    <header
-      class="flex-none w-full h-20 px-8 flex justify-between items-center border-b border-gray-800 bg-[#0f0f13] z-50"
-    >
-      <!-- 로고 -->
-      <a
-        href="index.html"
-        class="text-2xl font-bold font-title text-white tracking-wider hover:text-purple-400 transition-colors"
-      >
-        INSIDE GISANG
-      </a>
-
-      <!-- 데스크탑 네비게이션 -->
-      <nav class="hidden md:flex gap-8 text-sm font-bold">
-        <a href="profile.html" class="nav-link">Profile</a>
-        <a href="emotion.html" class="nav-link">Emotion Character</a>
-        <a href="core_memories.html" class="nav-link">Core Memories</a>
-        <a href="archive.html" class="nav-link text-white">Archive/Library</a>
-        <a href="timeline.html" class="nav-link">Timeline</a>
-      </nav>
-
-      <!-- 햄버거 버튼 (태블릿/모바일 전용) -->
-      <button id="menu-toggle" class="menu-button" aria-label="메뉴 열기">
-        <div class="menu-button-lines"></div>
-      </button>
+  <body>
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="index.html" class="logo">INSIDE GISANG</a>
+        <nav class="desktop-nav">
+          <a href="profile.html" class="nav-link">Profile</a>
+          <a href="emotion.html" class="nav-link">Emotion Character</a>
+          <a href="core_memories.html" class="nav-link">Core Memories</a>
+          <a href="archive.html" class="nav-link">Archive/Library</a>
+          <a href="arrangement.html" class="nav-link">Arrangement</a>
+        </nav>
+        <button id="menu-toggle" class="menu-button">
+          <div class="menu-button-lines"></div>
+        </button>
+      </div>
     </header>
 
-    <!-- 모바일 메뉴 백드롭 + 패널 -->
+    <!-- Mobile Menu -->
     <div id="mobile-menu-backdrop" class="mobile-menu-backdrop">
       <div id="mobile-menu" class="mobile-menu">
         <div class="mobile-menu-header">
           <div class="mobile-menu-title">INSIDE GISANG</div>
-          <button
-            id="mobile-menu-close"
-            class="mobile-menu-close"
-            aria-label="메뉴 닫기"
-          >
-            ✕
-          </button>
+          <button id="mobile-menu-close" class="mobile-menu-close">✕</button>
         </div>
-
         <nav class="mobile-menu-nav">
           <a href="profile.html" class="mobile-menu-link">Profile</a>
           <a href="emotion.html" class="mobile-menu-link">Emotion Character</a>
@@ -494,269 +510,101 @@
       </div>
     </div>
 
-    <!-- 메인 컨텐츠 영역 -->
-    <div class="flex-1 flex overflow-hidden relative main_flex">
-      <!-- 좌측 패널 -->
-      <aside
-        class="w-[40%] h-full flex flex-col justify-center p-12 relative z-10 bg-gradient-to-r from-[#0f0f13] to-[#16161c] border-r border-gray-800 shadow-2xl"
-      >
-        <div class="space-y-6">
-          <h1
-            class="text-6xl font-bold font-title text-transparent bg-clip-text bg-gradient-to-br from-purple-400 via-pink-300 to-blue-400 leading-tight"
-          >
-            장기 기억<br />저장소
-          </h1>
-          <p class="text-gray-400 text-lg font-light leading-relaxed">
-            유기상의 대학생활,<br />
-            그 날의 감정들이 영원히 기록되는 곳.
-          </p>
-        </div>
-
-        <div class="absolute bottom-10 left-12 text-gray-600 text-sm">
-          Inside Gi-sang Project
-        </div>
-      </aside>
-
-      <!-- 우측 패널 -->
-      <main class="w-[60%] h-full flex flex-col relative bg-[#0f0f13]">
-        <!-- 요일 헤더 -->
-        <div
-          class="flex-none pt-8 pb-4 px-8 border-b border-gray-800/50 bg-[#0f0f13]/90 backdrop-blur z-20"
-        >
-          <div
-            class="grid grid-cols-7 gap-4 text-center font-bold text-gray-500 text-sm tracking-wider"
-          >
-            <div>MON</div>
-            <div>TUE</div>
-            <div>WED</div>
-            <div>THU</div>
-            <div>FRI</div>
-            <div>SAT</div>
-            <div>SUN</div>
-          </div>
-        </div>
-
-        <!-- 그리드 + 푸터 -->
-        <div
-          class="flex-1 overflow-y-auto custom-scrollbar flex flex-col"
-          id="archive-container"
-        >
-          <div class="px-8 pt-8">
-            <div
-              id="memory-grid"
-              class="grid grid-cols-7 gap-y-12 gap-x-2 pb-20"
-            >
-              <!-- JS로 구슬 생성 -->
-            </div>
-          </div>
-
-          <footer
-            class="mt-auto w-full border-t border-gray-800 bg-[#16161c] py-16 px-12"
-          >
-            <div class="flex flex-col md:flex-row justify-between items-end">
-              <div class="mb-8 md:mb-0">
-                <h2
-                  class="text-4xl md:text-5xl font-bold font-title text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500"
-                >
-                  INSIDE<br />GISANG
-                </h2>
-                <p class="text-gray-500 mt-4 text-sm">
-                  Copyright © 2025 Gi-sang Yu. All rights reserved.
-                </p>
-              </div>
-
-              <div class="text-right space-y-4">
-                <a
-                  href="https://blog.naver.com/yu2647921"
-                  target="_blank"
-                  class="inline-flex items-center gap-2 text-gray-400 hover:text-[#2DB400] transition-colors group"
-                >
-                  <span
-                    class="font-bold group-hover:underline decoration-2 underline-offset-4"
-                    >유기상의 기록 보관소</span
-                  >
-                  <svg
-                    class="w-8 h-8 fill-current"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    style="transform: scaleX(-1) translate(3px, 0px)"
-                  >
-                    <path
-                      d="M15.258 7.5H18.75V16.5H15.258V10.9609L12.0234 16.5H8.53125V7.5H12.0156V13.0312L15.258 7.5Z"
-                    />
-                    <path d="M0 0H24V24H0V0Z" fill="none" />
-                  </svg>
-                </a>
-
-                <div class="border-t border-gray-700 pt-4 mt-2">
-                  <p class="text-lg font-bold text-white">
-                    유기상
-                    <span class="text-sm font-normal text-gray-400 ml-1"
-                      >22561061</span
-                    >
-                  </p>
-                  <p class="text-sm text-gray-500">
-                    계원예술대학교 디지털미디어디자인과
-                  </p>
-                </div>
-              </div>
-            </div>
-          </footer>
-        </div>
-      </main>
-    </div>
-
-    <!-- 모달 영역 (그대로) -->
-    <div
-      id="modal-backdrop"
-      class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4"
-    >
-      <button id="btn-prev" class="nav-btn left-4 lg:left-12">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-12 w-12"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </button>
-
-      <div
-        id="modal-content"
-        class="bg-[#1a1a20] w-full max-w-2xl rounded-2xl border border-gray-700 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] z-50 relative"
-      >
-        <div
-          class="p-6 border-b border-gray-700 flex justify-between items-start bg-[#222228]"
-        >
-          <div>
-            <div
-              id="modal-emotion-badge"
-              class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 bg-purple-900 text-purple-200 border border-purple-500/30"
-            >
-              감정: 기쁨
-            </div>
-            <h2
-              id="modal-title"
-              class="text-2xl font-bold font-title text-white"
-            >
-              제목
-            </h2>
-            <p id="modal-date" class="text-gray-400 text-sm mt-1">Date</p>
-          </div>
-          <button
-            onclick="closeModal()"
-            class="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div class="p-6 overflow-y-auto custom-scrollbar">
-          <div
-            class="w-full h-64 bg-[#111] rounded-xl mb-6 overflow-hidden relative group flex items-center justify-center border border-gray-800"
-          >
-            <img
-              id="modal-image"
-              src=""
-              alt="Emotion Character"
-              class="h-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
-            />
-          </div>
-
-          <div class="relative">
-            <div
-              class="absolute left-0 top-0 bottom-0 w-1 bg-gray-700 rounded-full"
-            ></div>
-            <div
-              id="modal-desc"
-              class="pl-4 text-gray-300 leading-relaxed text-sm md:text-base font-light"
-            ></div>
-          </div>
-        </div>
-
-        <div
-          class="p-4 border-t border-gray-700 bg-[#222228] flex justify-end items-center"
-        >
-          <button
-            onclick="closeModal()"
-            class="px-6 py-2 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            기억 닫기
-          </button>
-        </div>
+    <!-- Main Content (Home / Index) -->
+    <main class="home-main">
+      <div class="home-hero-area">
+        <h1 class="home-title">INSIDE GISANG</h1>
+        <p class="home-desc">진짜 나를 만날 시간!</p>
       </div>
 
-      <button id="btn-next" class="nav-btn right-4 lg:right-12">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-12 w-12"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+      <!-- Shape Container -->
+      <div class="shape-container">
+        <!-- Masked Image Layer (사진) -->
+        <div class="masked-image-layer"></div>
+
+        <!-- SVG Stroke Layer (선) -->
+        <svg class="stroke-svg" viewBox="0 0 197.43 559.09">
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
+            class="stroke-path"
+            d="M154.4,261.95c-.71,1.07-1.56,1.98-2.59,2.66-.66.44-1.41.85-1.7,1.59-.25.62-.09,1.32.06,1.97,2.8,11.81,5.61,23.62,8.41,35.43,3.47,14.62,7.24,31.6,13.78,45.24,4.56,9.49,4.13,24.67-.12,34.24-2.01,4.53-7.62,5.85-7.98,7.06-.31,1.04.82,2.65.61,3.74-.55,2.79-2.84,6.59-3.46,9.37-6.34,28.55-1.42,58.41-4.17,87.71.02,2.72,3.41,4.89,3.68,7.17s-2.22,5.5-1.28,7.38c4.84,9.62,32.55,8.54,28.57,24.29-3.01,11.91-32.69,5.89-39.94,3.13-4.95-1.88-16.76-12.76-20.19-11.94-3.03.72-10.01,13.02-13.92,14.99-1.8,6.31-13.28,17.39-18.98,20.01-.85.39-16.11,2.31-18.49,2.5-5.54.42-10.53-.07-13.54-5.42-1.01-1.78-2.87-16.9-2.98-20.01-.19-5.11.6-9.56,1.04-14.54l-9.02-.48c-1.46-4.29-5.66-9.33-6.54-13.46-1.55-7.27-.27-17.67-1.55-25.45-1.26-7.69-5.49-14.87-6.77-23.22s-.02-18.78-1.36-26.64c-.53-3.13-2.75-5.69-3.49-8.51-4.23-16-3.5-37.08-8.52-51.48-1.16-3.33-5.49-6.13-6.68-11.32-2.47-10.84,2.53-14.15,2.82-23.03.18-5.55-1.43-15.57-.87-20.78.39-3.59,4.47-8.01,4.81-10.3.92-6.23-1.69-16.98.25-23.54,3.02-10.15,2.93-11.2,3.97-22.2.19-1.98,1.95-3.52,1.93-5.08-.03-2.51-4.15-3.94-4.79-6.18-.72-2.52.34-5.27-.94-8.06s-4.75-2.81-5.11-3.38c-.82-1.3.6-4.86-.62-6.91h-3.4c-1.25-3.76-3.35-7.25-4.67-10.99-.57-1.62.37-3.2-.19-4.68-1.2-3.17-7.06-6.59-8.08-12.03-.59-3.14,1.17-6.22.87-9.74-.28-3.26-2.65-5.18-2.74-7.79-.2-5.76,3.91-10.89,4.39-14.37.57-4.04-1.27-12.2-.67-15.76,1.58-9.42,9.27-22.07,13.51-30.53,6.07-12.11,5.02-16.43,17.76-24.23,6.29-3.85,12.8-7.31,19.35-10.69,3.41-1.76,6.82-3.51,10.23-5.26,1.62-.83,5.82-1.74,6.93-3.13.26-.32-11.35-7.25-12.34-7.84-2.64-1.57-2.76-5.37-4.19-7.81-1.94-3.32-4.71-5.33-4.91-9.59-.05-1.07,1.63-2.41,1.6-3.98s-2.29-2.94-2.09-5.99c.14-2.13,1.66-3.1,1.9-4.26,1.05-5.16.4-10.47.86-15.68.52-5.89,2.87-10.21,5.47-15.46.18-.37.38-.76.72-1,.31-.23.71-.3,1.09-.39,1.87-.44,3.55-1.45,5.26-2.32C74.51.31,85.53-.63,95.45,1.8c6.8,1.67,20.64,8.65,23.93,15.06,7.02,13.7-1.81,26.52-5.14,39.25-3.71,14.18,2.51,21.83,15.2,26.87,16.56,6.57,33.83,12.08,44.04,27.78,10.44,16.05,12.43,36.52,18.66,54.31,2.59,7.39,6.76,9.22,3.73,17.66-2.46,6.84-14.23,26.82-19.76,31.23-2.99,2.38-15.65,7.86-16.44,9.56-1.01,2.15-.09,4.43-.54,6.46-1.63,7.48-.54,7.96-.97,15.03-.3,4.84-.72,12.34-3.76,16.93ZM103.18,470.5c-.4-11.11.56-22.38,0-33.48-.9-17.79-2.67-36.19-4-53.99-.68-9.07-2.88-18.39-3.48-27.5-1.54,1.22-1.9.38-2.56,2.5-3.61,11.63.45,15.14.1,25.02-.23,6.46-3.66,10.83-4.09,16.94,3.84,16.7,8.86,34.04,11.03,51.04.71,5.57.34,12.51,1.01,18.01.18,1.48.79,3.06,2,1.47Z"
           />
         </svg>
-      </button>
-    </div>
+      </div>
+    </main>
 
-    <!-- 기존 스크립트 -->
-    <script src="js/data.js"></script>
-    <script src="js/script.js"></script>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <h2>INSIDE<br />GISANG</h2>
+          <p class="footer-copyright">
+            Copyright © 2025 Gi-sang Yu. All rights reserved.
+          </p>
+        </div>
+        <div class="footer-right">
+          <a
+            href="https://blog.naver.com/yu2647921"
+            target="_blank"
+            class="blog-link"
+          >
+            <span>유기상의 기록 보관소</span>
+            <svg
+              viewBox="0 0 24 24"
+              style="transform: scaleX(-1) translateY(-5px)"
+            >
+              <path
+                d="M15.258 7.5H18.75V16.5H15.258V10.9609L12.0234 16.5H8.53125V7.5H12.0156V13.0312L15.258 7.5Z"
+              />
+              <path d="M0 0H24V24H0V0Z" fill="none" />
+            </svg>
+          </a>
+          <div class="footer-info">
+            <p class="footer-name">
+              유기상 <span class="footer-id">22561061</span>
+            </p>
+            <p class="footer-dept">계원예술대학교 디지털미디어디자인과</p>
+          </div>
+        </div>
+      </div>
+    </footer>
 
-    <!-- 모바일 메뉴 토글 스크립트 -->
     <script>
+      // 1. Mobile Menu Logic
       const menuToggle = document.getElementById('menu-toggle');
       const mobileMenu = document.getElementById('mobile-menu');
       const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
       const mobileClose = document.getElementById('mobile-menu-close');
 
-      function closeMobileMenu() {
+      function openMenu() {
+        mobileMenu.classList.add('open');
+        mobileBackdrop.classList.add('open');
+      }
+      function closeMenu() {
         mobileMenu.classList.remove('open');
         mobileBackdrop.classList.remove('open');
       }
 
-      function openMobileMenu() {
-        mobileMenu.classList.add('open');
-        mobileBackdrop.classList.add('open');
-      }
-
-      menuToggle.addEventListener('click', openMobileMenu);
-      mobileClose.addEventListener('click', closeMobileMenu);
-      mobileBackdrop.addEventListener('click', function (e) {
-        // 패널 바깥(검은 영역) 클릭 시에만 닫기
-        if (e.target === mobileBackdrop) {
-          closeMobileMenu();
-        }
+      menuToggle.addEventListener('click', openMenu);
+      mobileClose.addEventListener('click', closeMenu);
+      mobileBackdrop.addEventListener('click', (e) => {
+        if (e.target === mobileBackdrop) closeMenu();
       });
 
-      // 모바일 메뉴 안의 링크 클릭 시 자동 닫기
-      document.querySelectorAll('.mobile-menu-link').forEach(function (link) {
-        link.addEventListener('click', closeMobileMenu);
+      // 2. Anime.js Stroke + 이미지 페이드인
+      document.addEventListener('DOMContentLoaded', () => {
+        anime({
+          targets: '.stroke-path',
+          strokeDashoffset: [anime.setDashoffset, 0],
+          easing: 'easeInOutSine',
+          duration: 3000,
+          delay: 500,
+          direction: 'alternate',
+          loop: false,
+          complete: function () {
+            // 선 그려진 후 이미지만 페이드인
+            document.querySelector('.masked-image-layer').style.opacity = '1';
+          },
+        });
       });
     </script>
   </body>
